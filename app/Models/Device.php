@@ -9,7 +9,12 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $table = 'progress';
+    protected $table = 'objects';
 
-    protected $fillable = ['status'];
+    protected $fillable = ['name', 'department_id'];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
 }

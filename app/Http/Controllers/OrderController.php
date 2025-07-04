@@ -10,21 +10,20 @@ use App\Models\User;
 class OrderController extends Controller
 {
     /**
-     * Menampilkan daftar tugas (API & Web).
+     * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $tugas = Order::with('user')->paginate(5);
-    //     $users = User::all();
+    public function index()
+    {
+        $orders = Order::with([
+            'department',
+            'category',
+            'object',
+            'pic',
+            'reporter',
+            'progress',
+            'priority'
+        ])->paginate(10);
 
-    //     if (request()->wantsJson()) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $tugas,
-    //         ]);
-    //     }
-
-    //     return view('tugas.tugas', compact('tugas', 'users'));
-    // }
+        return view('orders.orders', compact('orders'));
+    }
 }
- 
