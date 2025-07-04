@@ -20,13 +20,21 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'role_id',
         'email',
+        'department_id',
         'password',
     ];
 
+    // Cara menguhubungkan dengan model Role dan Department
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id'); // Pastikan 'role_id' adalah foreign key di tabel users
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     /**
