@@ -20,12 +20,7 @@ Route::get('/dashboard', function () {
 
 Route::prefix('order')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('order.index'); // Menampilkan daftar order
-    // Route::get('/create', [OrderController::class, 'create'])->name('order.create'); // Menampilkan halaman tambah order
-    // Route::get('/{id}/edit', [OrderController::class, 'edit'])->name('order.edit'); // Menampilkan halaman edit order
-    // Route::get('/{id}/delete', [OrderController::class, 'confirm'])->name('order.confirm'); // Menampilkan halaman delete order
-    // Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
-    // Route::put('/{id}', [OrderController::class, 'update'])->name('order.update'); // Mengedit order
-    // Route::delete('/{id}', [OrderController::class, 'delete'])->name('order.delete'); // Menghapus order
-});
+    Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
+   });
 
 require __DIR__.'/auth.php';

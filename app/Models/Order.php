@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\Device;
+use App\Models\Category;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +21,7 @@ class Order extends Model
         'reporter',
         'title',
         'description',
+        'photo',
         'date',
         'time',
         'progress_id',
