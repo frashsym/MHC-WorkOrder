@@ -17,4 +17,9 @@ class Category extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+
+        public function orders()
+    {
+        return $this->hasMany(Order::class, 'category_id');
+    }
 }

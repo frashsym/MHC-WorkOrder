@@ -13,7 +13,7 @@ class ProgressSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('progress')->insert([
+        DB::table('progresses')->insert([
             ['status' => 'Schedule',],
             ['status' => 'On Progress',],
             ['status' => 'Hold',],

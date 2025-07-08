@@ -1,8 +1,13 @@
 <?php
 
 namespace App\Models;
-use App\Models\Device;
+use App\Models\Department;
+use App\Models\Priority;
 use App\Models\Category;
+use App\Models\Progress;
+use App\Models\Item;
+use App\Models\User;
+use App\Models\Pic;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +21,7 @@ class Order extends Model
     protected $fillable = [
         'department_id',
         'category_id',
-        'object_id',
+        'item_id',
         'pic_id',
         'reporter',
         'title',
@@ -38,9 +43,9 @@ class Order extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function object()
+    public function item()
     {
-        return $this->belongsTo(Device::class, 'object_id');
+        return $this->belongsTo(Item::class, 'item_id');
     }
 
     public function pic()

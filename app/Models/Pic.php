@@ -17,4 +17,9 @@ class Pic extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+
+        public function orders()
+    {
+        return $this->hasMany(Order::class, 'pic_id');
+    }
 }

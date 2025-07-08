@@ -17,7 +17,7 @@ class OrderSeeder extends Seeder
             DB::table('orders')->insert([
                 'department_id' => 1,
                 'category_id' => 1,
-                'object_id' => 1,
+                'item_id' => 1,
                 'pic_id' => 1,
                 'reporter' => 1,
                 'title' => 'Order Title ' . $i,

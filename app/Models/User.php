@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'reporter');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

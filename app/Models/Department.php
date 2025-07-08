@@ -27,9 +27,9 @@ class Department extends Model
         return $this->hasMany(Category::class, 'department_id');
     }
 
-    public function object()
+    public function item()
     {
-        return $this->hasMany(Object::class, 'department_id');
+        return $this->hasMany(Item::class, 'department_id');
     }
 
     public function pic()

@@ -9,7 +9,12 @@ class Progress extends Model
 {
     use HasFactory;
 
-    protected $table = 'progress';
+    protected $table = 'progresses';
 
     protected $fillable = ['status'];
+
+        public function orders()
+    {
+        return $this->hasMany(Order::class, 'progress_id');
+    }
 }

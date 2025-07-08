@@ -8,7 +8,7 @@ use App\Models\Department;
 use App\Models\Category;
 use App\Models\Progress;
 use App\Models\Priority;
-use App\Models\Device;
+use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Pic;
@@ -23,7 +23,7 @@ class OrderController extends Controller
         $orders = Order::with([
             'department',
             'category',
-            'object',
+            'item',
             'pic',
             'reporter',
             'progress',
@@ -32,7 +32,7 @@ class OrderController extends Controller
 
         $departments = Department::all();
         $categories = Category::all();
-        $objects = Device::all();
+        $items = Item::all();
         $pics = Pic::all();
         $users = User::all();
         $progresses = Progress::all();
@@ -42,7 +42,7 @@ class OrderController extends Controller
             'orders',
             'departments',
             'categories',
-            'objects',
+            'items',
             'pics',
             'users',
             'progresses',
@@ -55,7 +55,7 @@ class OrderController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'object_id' => 'required|exists:devices,id',
+            'item_id' => 'required|exists:items,id',
             'department_id' => 'required|exists:departments,id',
             'category_id' => 'required|exists:categories,id',
             'progress_id' => 'required|exists:progresses,id',
@@ -65,18 +65,10 @@ class OrderController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $fileName = null;
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $extension = $file->getClientOriginalExtension();
-            $fileName = time() . '_' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.' . $extension;
-            $file->move(public_path('images/orders'), $fileName);
-        }
-
         $order = Order::create([
             'title' => $request->title,
             'description' => $request->description,
-            'object_id' => $request->object_id,
+            'item_id' => $request->item_id,
             'department_id' => $request->department_id,
             'category_id' => $request->category_id,
             'progress_id' => $request->progress_id,
@@ -84,7 +76,6 @@ class OrderController extends Controller
             'date' => $request->date,
             'time' => $request->time,
             'reporter' => auth()->id(),
-            'photo' => $fileName,
         ]);
 
         if ($request->wantsJson()) {

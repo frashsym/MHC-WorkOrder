@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
-            $table->foreignId('category_id')->nullable()->constrained('categorys')->onDelete('set null');
-            $table->foreignId('object_id')->nullable()->constrained('objects')->onDelete('set null');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->foreignId('item_id')->nullable()->constrained('items')->onDelete('set null');
             $table->foreignId('pic_id')->nullable()->constrained('pics')->onDelete('set null');
             $table->foreignId('reporter')->nullable()->constrained('users')->onDelete('set null');
             $table->string('title');
             $table->text('description')->nullable();
             $table->date('date')->nullable();
             $table->time('time')->nullable();
-            $table->foreignId('progress_id')->nullable()->constrained('progress')->onDelete('set null');
+            $table->foreignId('progress_id')->nullable()->constrained('progresses')->onDelete('set null');
             $table->foreignId('priority_id')->nullable()->constrained('priorities')->onDelete('set null');
             $table->timestamps();
         });
