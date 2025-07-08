@@ -20,7 +20,7 @@
                     </div>
 
                     <!-- Modal -->
-                    <div x-show="open" class="relative z-10" aria-labelledby="modal-title" role="dialog"
+                    <div x-show="open" x-cloak class="relative z-10" aria-labelledby="modal-title" role="dialog"
                         aria-modal="true">
                         <!-- Background backdrop -->
                         <div x-show="open" x-transition.opacity
