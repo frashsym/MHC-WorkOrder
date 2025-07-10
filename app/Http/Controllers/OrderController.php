@@ -25,7 +25,7 @@ class OrderController extends Controller
             'category',
             'item',
             'pic',
-            'reporter',
+            'reporterUser',
             'progress',
             'priority'
         ])->paginate(10);
@@ -50,6 +50,19 @@ class OrderController extends Controller
         ));
     }
 
+    public function getDependentData($departmentId)
+    {
+        $items = Item::where('department_id', $departmentId)->get();
+        $categories = Category::where('department_id', $departmentId)->get();
+        $pics = Pic::where('department_id', $departmentId)->get();
+
+        return response()->json([
+            'items' => $items,
+            'categories' => $categories,
+            'pics' => $pics,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -60,9 +73,8 @@ class OrderController extends Controller
             'category_id' => 'required|exists:categories,id',
             'progress_id' => 'required|exists:progresses,id',
             'priority_id' => 'required|exists:priorities,id',
-            'date' => 'required|date',
-            'time' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'pic_id' => 'required|exists:pics,id',
+            'reporter' => 'required|exists:users,id',
         ]);
 
         $order = Order::create([
@@ -73,9 +85,10 @@ class OrderController extends Controller
             'category_id' => $request->category_id,
             'progress_id' => $request->progress_id,
             'priority_id' => $request->priority_id,
-            'date' => $request->date,
-            'time' => $request->time,
-            'reporter' => auth()->id(),
+            'pic_id' => $request->pic_id,
+            'date' => now()->toDateString(),
+            'time' => now()->format('H:i'),
+            'reporter' => $request->reporter,
         ]);
 
         if ($request->wantsJson()) {
@@ -87,5 +100,56 @@ class OrderController extends Controller
         }
 
         return redirect()->route('order.index')->with('success', 'Order berhasil ditambahkan!');
+    }
+
+    public function show(Order $order)
+    {
+        $order->load([
+            'department',
+            'category',
+            'item',
+            'pic',
+            'reporterUser',
+            'progress',
+            'priority'
+        ]);
+
+        return view('orders.detail', compact('order'));
+    }
+
+    public function update(Request $request, Order $order)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'item_id' => 'required|exists:items,id',
+            'department_id' => 'required|exists:departments,id',
+            'category_id' => 'required|exists:categories,id',
+            'progress_id' => 'required|exists:progresses,id',
+            'priority_id' => 'required|exists:priorities,id',
+            'pic_id' => 'required|exists:pics,id',
+            'reporter' => 'required|exists:users,id',
+        ]);
+
+        $order->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'item_id' => $request->item_id,
+            'department_id' => $request->department_id,
+            'category_id' => $request->category_id,
+            'progress_id' => $request->progress_id,
+            'priority_id' => $request->priority_id,
+            'pic_id' => $request->pic_id,
+            'reporter' => $request->reporter,
+        ]);
+
+        return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
+    }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+
+        return redirect()->route('order.index')->with('success', 'Order berhasil dihapus!');
     }
 }

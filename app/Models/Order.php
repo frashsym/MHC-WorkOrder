@@ -53,7 +53,7 @@ class Order extends Model
         return $this->belongsTo(Pic::class, 'pic_id');
     }
 
-    public function reporter()
+    public function reporterUser()
     {
         return $this->belongsTo(User::class, 'reporter');
     }
