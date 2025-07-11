@@ -16,21 +16,20 @@ use App\Http\Controllers\DepartmentController;
 //     return view('welcome');
 // })->name('index');
 
-Route::middleware('auth.custom')->group(function () {
+Route::middleware(['auth'],)->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth.custom', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // API route to fetch dependent data based on department ID
-Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
-
 // Order routes
-Route::prefix('order')->middleware(['auth.custom', 'verified'])->group(function () {
+Route::prefix('order')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('order.index'); // Menampilkan daftar order
     Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
     Route::get('/{order}', [OrderController::class, 'show'])->name('order.show'); // Menampilkan detail order
@@ -39,7 +38,7 @@ Route::prefix('order')->middleware(['auth.custom', 'verified'])->group(function 
 });
 
 // Department routes
-Route::prefix('department')->middleware(['auth.custom', 'verified'])->group(function () {
+Route::prefix('department')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [DepartmentController::class, 'index'])->name('department.index');
     Route::post('/', [DepartmentController::class, 'store'])->name('department.store');
     Route::put('/{department}', [DepartmentController::class, 'update'])->name('department.update');
@@ -47,7 +46,7 @@ Route::prefix('department')->middleware(['auth.custom', 'verified'])->group(func
 });
 
 // Category routes
-Route::prefix('category')->middleware(['auth.custom', 'verified'])->group(function () {
+Route::prefix('category')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/{category}', [CategoryController::class, 'show'])->name('category.show');
@@ -56,7 +55,7 @@ Route::prefix('category')->middleware(['auth.custom', 'verified'])->group(functi
 });
 
 // Item routes
-Route::prefix('item')->middleware(['auth.custom', 'verified'])->group(function () {
+Route::prefix('item')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ItemController::class, 'index'])->name('item.index');
     Route::post('/', [ItemController::class, 'store'])->name('item.store');
     Route::put('/{item}', [ItemController::class, 'update'])->name('item.update');
@@ -64,15 +63,15 @@ Route::prefix('item')->middleware(['auth.custom', 'verified'])->group(function (
 });
 
 // PIC routes
-Route::prefix('pic')->name('pic.')->group(function () {
-    Route::get('/', [PicController::class, 'index'])->name('index');
-    Route::post('/', [PicController::class, 'store'])->name('store');
-    Route::put('/{pic}', [PicController::class, 'update'])->name('update');
-    Route::delete('/{pic}', [PicController::class, 'destroy'])->name('destroy');
+Route::prefix('pic')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [PicController::class, 'index'])->name('pic.index');
+    Route::post('/', [PicController::class, 'store'])->name('pic.store');
+    Route::put('/{pic}', [PicController::class, 'update'])->name('pic.update');
+    Route::delete('/{pic}', [PicController::class, 'destroy'])->name('pic.destroy');
 });
 
 // Priority routes
-Route::prefix('priority')->group(function () {
+Route::prefix('priority')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [PriorityController::class, 'index'])->name('priority.index');
     Route::post('/', [PriorityController::class, 'store'])->name('priority.store');
     Route::put('/{id}', [PriorityController::class, 'update'])->name('priority.update');
@@ -80,7 +79,7 @@ Route::prefix('priority')->group(function () {
 });
 
 // Progress routes
-Route::prefix('progress')->group(function () {
+Route::prefix('progress')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ProgressController::class, 'index'])->name('progress.index');
     Route::post('/', [ProgressController::class, 'store'])->name('progress.store');
     Route::put('/{id}', [ProgressController::class, 'update'])->name('progress.update');
@@ -88,7 +87,7 @@ Route::prefix('progress')->group(function () {
 });
 
 // Role routes
-Route::prefix('role')->group(function () {
+Route::prefix('role')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('role.index');
     Route::post('/', [RoleController::class, 'store'])->name('role.store');
     Route::put('/{id}', [RoleController::class, 'update'])->name('role.update');
@@ -96,12 +95,11 @@ Route::prefix('role')->group(function () {
 });
 
 // User routes
-Route::prefix('user')->group(function () {
+Route::prefix('user')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::post('/', [UserController::class, 'store'])->name('user.store');
     Route::put('/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 });
-
 
 require __DIR__ . '/auth.php';

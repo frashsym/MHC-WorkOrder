@@ -12,7 +12,13 @@ class RedirectIfNotAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect('/'); // halaman default kamu
+            // Kalau request adalah Ajax atau JSON (misal untuk API), balikin unauthorized
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
+            // Kalau bukan, redirect ke halaman utama
+            return redirect('/');
         }
 
         return $next($request);
