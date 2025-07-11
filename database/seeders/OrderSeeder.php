@@ -19,7 +19,7 @@ class OrderSeeder extends Seeder
                 'category_id' => rand(1, 3),
                 'item_id' => rand(1, 3),
                 'pic_id' => rand(1, 3),
-                'reporter' => rand(1, 3),
+                'reporter' => rand(1, 2),
                 'title' => 'Order Title ' . $i,
                 'description' => 'This is the description for order #' . $i,
                 'date' => now()->toDateString(),

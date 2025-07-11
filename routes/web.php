@@ -27,7 +27,7 @@ Route::prefix('order')->middleware(['auth.custom', 'verified'])->group(function 
     Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
     Route::get('/{order}', [OrderController::class, 'show'])->name('order.show'); // Menampilkan detail order
     Route::put('/{order}', [OrderController::class, 'update'])->name('order.update'); // Mengupdate order
-    Route::delete('/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
+    Route::delete('/{order}', [OrderController::class, 'destroy'])->name('order.destroy'); // Menghapus order
    });
 
 require __DIR__.'/auth.php';

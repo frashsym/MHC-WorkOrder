@@ -146,7 +146,6 @@ class OrderController extends Controller
         return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
     }
     
-
     public function destroy(Order $order)
     {
         $order->delete();
