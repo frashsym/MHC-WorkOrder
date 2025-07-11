@@ -28,7 +28,7 @@ class OrderController extends Controller
             'reporterUser',
             'progress',
             'priority'
-        ])->paginate(10);
+        ])->latest()->paginate(10);
 
         $departments = Department::all();
         $categories = Category::all();
@@ -38,7 +38,7 @@ class OrderController extends Controller
         $progresses = Progress::all();
         $priorities = Priority::all();
 
-        return view('orders.orders', compact(
+        return view('order.order', compact(
             'orders',
             'departments',
             'categories',
@@ -145,7 +145,7 @@ class OrderController extends Controller
 
         return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
     }
-    
+
     public function destroy(Order $order)
     {
         $order->delete();

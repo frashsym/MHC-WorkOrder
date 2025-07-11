@@ -18,6 +18,30 @@
                     <x-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
                         {{ __('Order') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('department.index')" :active="request()->routeIs('department.index')">
+                        {{ __('Departmen') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
+                        {{ __('Kategori') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('item.index')" :active="request()->routeIs('item.index')">
+                        {{ __('Objek') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('pic.index')" :active="request()->routeIs('pic.index')">
+                        {{ __('Pic') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('priority.index')" :active="request()->routeIs('priority.index')">
+                        {{ __('Prioritas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('progress.index')" :active="request()->routeIs('progress.index')">
+                        {{ __('Progress') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('role.index')" :active="request()->routeIs('role.index')">
+                        {{ __('Role') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
+                        {{ __('User') }}
+                    </x-nav-link>
                 </div>
             </div>
 
