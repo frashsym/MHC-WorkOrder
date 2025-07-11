@@ -12,11 +12,10 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role', 'department')->latest()->paginate(10);
+        $users = User::with('role')->latest()->paginate(10);
         $roles = Role::all();
-        $departments = Department::all();
 
-        return view('user.user', compact('users', 'roles', 'departments'));
+        return view('user.user', compact('users', 'roles'));
     }
 
     public function store(Request $request)
@@ -26,7 +25,6 @@ class UserController extends Controller
             'username'      => 'required|string|max:255|unique:users',
             'role_id'       => 'required|exists:roles,id',
             'email'         => 'required|email|unique:users',
-            'department_id' => 'required|exists:departments,id',
             'password'      => 'required|string|min:6|confirmed',
         ]);
 
@@ -35,8 +33,7 @@ class UserController extends Controller
             'username'      => $request->username,
             'role_id'       => $request->role_id,
             'email'         => $request->email,
-            'department_id' => $request->department_id,
-            'password'      => Hash::make($request->password),
+            'password'      => bcrypt($request->password),
         ]);
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan!');
@@ -44,24 +41,31 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name'          => 'required|string|max:255',
-            'username'      => 'required|string|max:255|unique:users,username,' . $user->id,
-            'role_id'       => 'required|exists:roles,id',
-            'email'         => 'required|email|unique:users,email,' . $user->id,
-            'department_id' => 'required|exists:departments,id',
-            'password'      => 'nullable|string|min:6|confirmed',
-        ]);
+        $rules = [
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'email' => 'required|email',
+            'role_id' => 'required|exists:roles,id',
+        ];
 
-        $data = $request->only('name', 'username', 'role_id', 'email', 'department_id');
+        // Validasi password hanya jika diisi
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $rules['password'] = 'nullable|min:6';
+        }
+
+        $validated = $request->validate($rules);
+
+        $data = $request->only('name', 'username', 'email', 'role_id');
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
         }
 
         $user->update($data);
 
         return redirect()->route('user.index')->with('success', 'User berhasil diperbarui!');
     }
+
 
     public function destroy(User $user)
     {

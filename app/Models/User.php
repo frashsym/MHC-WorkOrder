@@ -22,7 +22,6 @@ class User extends Authenticatable
         'username',
         'role_id',
         'email',
-        'department_id',
         'password',
     ];
 
@@ -30,11 +29,6 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
-    }
-
-    public function department()
-    {
-        return $this->belongsTo(Department::class, 'department_id');
     }
 
     public function orders()

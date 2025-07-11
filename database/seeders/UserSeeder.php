@@ -19,8 +19,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin MHC',
                 'username' => 'adminmhc',
-                'email' => 'admin@example.com',
-                'department_id' => 1,
+                'email' => 'admin@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('qwertyuiop'),
                 'remember_token' => Str::random(10),
@@ -30,8 +29,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'User Biasa',
                 'username' => 'userbiasa',
-                'email' => 'user@example.com',
-                'department_id' => 1,
+                'email' => 'user@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('qwertyuiop'),
                 'remember_token' => Str::random(10),

@@ -17,41 +17,41 @@
                         </button>
                     </div>
 
-                    <!-- Alert -->
-                    @if (session('success'))
-                        <div class="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     <!-- Modal Tambah/Edit -->
                     <div x-show="modalOpen" x-cloak>
-                        <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+                        <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
+                        </div>
                         <div class="fixed inset-0 z-30 overflow-y-auto">
                             <div class="flex min-h-full items-center justify-center p-4">
                                 <div x-show="modalOpen" x-transition @click.outside="modalOpen = false"
                                     class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-                                    <form :action="isEditMode ? '/user/' + formData.id : '{{ route('user.store') }}'" method="POST">
+                                    <form :action="isEditMode ? '/user/' + formData.id : '{{ route('user.store') }}'"
+                                        method="POST">
                                         @csrf
                                         <template x-if="isEditMode">
                                             <input type="hidden" name="_method" value="PUT">
                                         </template>
-                                        <h2 class="text-lg font-semibold mb-4" x-text="isEditMode ? 'Edit User' : 'Tambah User'"></h2>
+                                        <h2 class="text-lg font-semibold mb-4"
+                                            x-text="isEditMode ? 'Edit User' : 'Tambah User'"></h2>
+
                                         <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700">Nama</label>
                                             <input type="text" name="name" x-model="formData.name" required
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
+
                                         <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700">Username</label>
                                             <input type="text" name="username" x-model="formData.username" required
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
+
                                         <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700">Email</label>
                                             <input type="email" name="email" x-model="formData.email" required
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
+
                                         <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700">Role</label>
                                             <select name="role_id" x-model="formData.role_id" required
@@ -62,26 +62,22 @@
                                                 @endforeach
                                             </select>
                                         </div>
+
                                         <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700">Departemen</label>
-                                            <select name="department_id" x-model="formData.department_id" required
-                                                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <option value="">-- Pilih --</option>
-                                                @foreach ($departments as $dept)
-                                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="mb-4" x-show="!isEditMode">
                                             <label class="block text-sm font-medium text-gray-700">Password</label>
-                                            <input type="password" name="password" required
+                                            <input type="password" name="password" x-model="formData.password"
+                                                :required="!isEditMode"
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
+
+                                        <!-- Tampilkan hanya saat Create -->
                                         <div class="mb-4" x-show="!isEditMode">
-                                            <label class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                                            <input type="password" name="password_confirmation" required
+                                            <label class="block text-sm font-medium text-gray-700">Konfirmasi
+                                                Password</label>
+                                            <input type="password" name="password_confirmation"
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
+
                                         <div class="flex justify-end space-x-2">
                                             <button type="button" @click="modalOpen = false"
                                                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded">
@@ -98,9 +94,40 @@
                         </div>
                     </div>
 
+                    <!-- Modal Delete -->
+                    <div x-show="deleteModal" x-cloak>
+                        <div x-show="deleteModal" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
+                        </div>
+                        <div class="fixed inset-0 z-40 overflow-y-auto">
+                            <div class="flex items-center justify-center min-h-screen p-4">
+                                <div x-show="deleteModal" x-transition
+                                    class="bg-white rounded-lg shadow-xl w-full max-w-md p-6"
+                                    @click.outside="deleteModal = false">
+                                    <h2 class="text-lg font-semibold text-gray-800">Konfirmasi Hapus</h2>
+                                    <p class="mt-2 text-gray-600">Yakin ingin menghapus user ini?</p>
+                                    <div class="mt-4 flex justify-end space-x-2">
+                                        <button @click="deleteModal = false"
+                                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded">
+                                            Batal
+                                        </button>
+                                        <form :action="'/user/' + deleteId" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tabel -->
                     <div class="overflow-x-auto mt-6">
-                        <table class="min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
+                        <table
+                            class="min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
                             <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <tr>
                                     <th class="px-4 py-2 text-left">No</th>
@@ -108,7 +135,6 @@
                                     <th class="px-4 py-2 text-left">Username</th>
                                     <th class="px-4 py-2 text-left">Email</th>
                                     <th class="px-4 py-2 text-left">Role</th>
-                                    <th class="px-4 py-2 text-left">Departemen</th>
                                     <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
@@ -120,27 +146,16 @@
                                         <td class="px-4 py-2">{{ $user->username }}</td>
                                         <td class="px-4 py-2">{{ $user->email }}</td>
                                         <td class="px-4 py-2">{{ $user->role->role ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $user->department->name ?? '-' }}</td>
                                         <td class="px-4 py-2 space-x-2">
-                                            <button @click="openEdit({
-                                                    id: {{ $user->id }},
-                                                    name: '{{ $user->name }}',
-                                                    username: '{{ $user->username }}',
-                                                    email: '{{ $user->email }}',
-                                                    role_id: {{ $user->role_id }},
-                                                    department_id: {{ $user->department_id }}
-                                                })"
+                                            <button
+                                                @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }} })"
                                                 class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin ingin menghapus user ini?')"
-                                                    class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded">
-                                                    <i class="fas fa-trash"></i> Hapus
-                                                </button>
-                                            </form>
+                                            <button @click="deleteModal = true; deleteId = {{ $user->id }}"
+                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -161,6 +176,7 @@
             return {
                 modalOpen: false,
                 isEditMode: false,
+                showPassword: false,
                 deleteModal: false,
                 deleteId: null,
                 formData: {
@@ -169,7 +185,6 @@
                     username: '',
                     email: '',
                     role_id: '',
-                    department_id: ''
                 },
                 openCreate() {
                     this.resetForm();
@@ -178,7 +193,9 @@
                 },
                 openEdit(user) {
                     this.isEditMode = true;
-                    this.formData = { ...user };
+                    this.formData = {
+                        ...user
+                    };
                     this.modalOpen = true;
                 },
                 resetForm() {
@@ -188,9 +205,8 @@
                         username: '',
                         email: '',
                         role_id: '',
-                        department_id: ''
                     };
-                },
+                }
             }
         }
     </script>
