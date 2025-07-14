@@ -114,7 +114,7 @@ class OrderController extends Controller
             'priority'
         ]);
 
-        return view('orders.detail', compact('order'));
+        return view('order.detail', compact('order'));
     }
 
     public function update(Request $request, Order $order)
