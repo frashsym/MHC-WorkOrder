@@ -6,43 +6,68 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('favicon.ico') }}" alt="Logo" class="h-9 w-auto" />
+                        <img src="{{ asset('images/Metland.png') }}" alt="Logo" class="h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
-                        {{ __('Order') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('department.index')" :active="request()->routeIs('department.index')">
-                        {{ __('Departmen') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
-                        {{ __('Kategori') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('item.index')" :active="request()->routeIs('item.index')">
-                        {{ __('Objek') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('pic.index')" :active="request()->routeIs('pic.index')">
-                        {{ __('Pic') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('priority.index')" :active="request()->routeIs('priority.index')">
-                        {{ __('Prioritas') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('progress.index')" :active="request()->routeIs('progress.index')">
-                        {{ __('Progress') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('role.index')" :active="request()->routeIs('role.index')">
-                        {{ __('Role') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
-                        {{ __('User') }}
-                    </x-nav-link>
-                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
+
+                {{-- Dashboard dan Order --}}
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-nav-link>
+    <x-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
+        {{ __('Order') }}
+    </x-nav-link>
+
+    {{-- Dropdown: Master Data --}}
+    <x-dropdown align="left" width="48">
+    <x-slot name="trigger">
+        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
+            {{ __('Master Data') }}
+            <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </x-slot>
+
+    <x-slot name="content">
+        <x-dropdown-link :href="route('department.index')">{{ __('Departmen') }}</x-dropdown-link>
+        <x-dropdown-link :href="route('category.index')">{{ __('Kategori') }}</x-dropdown-link>
+        <x-dropdown-link :href="route('item.index')">{{ __('Objek') }}</x-dropdown-link>
+        <x-dropdown-link :href="route('pic.index')">{{ __('PIC') }}</x-dropdown-link>
+    </x-slot>
+</x-dropdown>
+
+
+    {{-- Dropdown: Pengguna & Akses --}}
+    <x-dropdown align="left" width="48">
+    <x-slot name="trigger">
+        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
+            {{ __('Pengguna & Akses') }}
+            <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </x-slot>
+
+    <x-slot name="content">
+        <x-dropdown-link :href="route('role.index')">{{ __('Role') }}</x-dropdown-link>
+        <x-dropdown-link :href="route('user.index')">{{ __('User') }}</x-dropdown-link>
+    </x-slot>
+</x-dropdown>
+
+
+    {{-- Prioritas & Progress tetap tampil langsung --}}
+    <x-nav-link :href="route('priority.index')" :active="request()->routeIs('priority.index')">
+        {{ __('Prioritas') }}
+    </x-nav-link>
+    <x-nav-link :href="route('progress.index')" :active="request()->routeIs('progress.index')">
+        {{ __('Progress') }}
+    </x-nav-link>
+</div>
+
             </div>
 
             <!-- Settings Dropdown -->
