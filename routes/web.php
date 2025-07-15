@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PicController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
@@ -60,14 +59,6 @@ Route::prefix('item')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [ItemController::class, 'store'])->name('item.store');
     Route::put('/{item}', [ItemController::class, 'update'])->name('item.update');
     Route::delete('/{item}', [ItemController::class, 'destroy'])->name('item.destroy');
-});
-
-// PIC routes
-Route::prefix('pic')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [PicController::class, 'index'])->name('pic.index');
-    Route::post('/', [PicController::class, 'store'])->name('pic.store');
-    Route::put('/{pic}', [PicController::class, 'update'])->name('pic.update');
-    Route::delete('/{pic}', [PicController::class, 'destroy'])->name('pic.destroy');
 });
 
 // Priority routes

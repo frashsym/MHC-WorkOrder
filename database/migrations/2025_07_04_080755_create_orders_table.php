@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->foreignId('item_id')->nullable()->constrained('items')->onDelete('set null');
-            $table->foreignId('pic_id')->nullable()->constrained('pics')->onDelete('set null');
+            $table->foreignId('pic')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('reporter')->nullable()->constrained('users')->onDelete('set null');
             $table->string('title');
             $table->text('description')->nullable();

@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\Progress;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Pic;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,11 +21,10 @@ class Order extends Model
         'department_id',
         'category_id',
         'item_id',
-        'pic_id',
+        'pic',
         'reporter',
         'title',
         'description',
-        'photo',
         'date',
         'time',
         'progress_id',
@@ -48,9 +46,9 @@ class Order extends Model
         return $this->belongsTo(Item::class, 'item_id');
     }
 
-    public function pic()
+    public function picUser()
     {
-        return $this->belongsTo(Pic::class, 'pic_id');
+        return $this->belongsTo(User::class, 'pic');
     }
 
     public function reporterUser()

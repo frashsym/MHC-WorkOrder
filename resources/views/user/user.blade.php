@@ -133,8 +133,9 @@
                                     <th class="px-4 py-2 text-left">No</th>
                                     <th class="px-4 py-2 text-left">Nama</th>
                                     <th class="px-4 py-2 text-left">Username</th>
-                                    <th class="px-4 py-2 text-left">Email</th>
                                     <th class="px-4 py-2 text-left">Role</th>
+                                    <th class="px-4 py-2 text-left">Email</th>
+                                    <th class="px-4 py-2 text-left">Departmen</th>
                                     <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
@@ -144,8 +145,9 @@
                                         <td class="px-4 py-2">{{ $users->firstItem() + $index }}</td>
                                         <td class="px-4 py-2">{{ $user->name }}</td>
                                         <td class="px-4 py-2">{{ $user->username }}</td>
-                                        <td class="px-4 py-2">{{ $user->email }}</td>
                                         <td class="px-4 py-2">{{ $user->role->role ?? '-' }}</td>
+                                        <td class="px-4 py-2">{{ $user->email }}</td>
+                                        <td class="px-4 py-2">{{ $user->department->name }}</td>
                                         <td class="px-4 py-2 space-x-2">
                                             <button
                                                 @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }} })"

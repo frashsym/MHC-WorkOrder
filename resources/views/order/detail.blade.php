@@ -19,7 +19,7 @@
                     <div><strong>Kategori:</strong> {{ $order->category->name ?? '-' }}</div>
                     <div><strong>Progress:</strong> {{ $order->progress->status ?? '-' }}</div>
                     <div><strong>Prioritas:</strong> {{ $order->priority->priority ?? '-' }}</div>
-                    <div><strong>Solver:</strong> {{ $order->pic->name ?? '-' }}</div>
+                    <div><strong>Solver:</strong> {{ $order->picUser->name ?? '-' }}</div>
                     <div><strong>Pelapor:</strong> {{ $order->reporterUser->name ?? '-' }}</div>
                     <div><strong>Tanggal:</strong> {{ $order->date }}</div>
                     <div><strong>Waktu:</strong> {{ $order->time }}</div>

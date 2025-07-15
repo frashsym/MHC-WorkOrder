@@ -205,7 +205,7 @@
                                     <th class="px-4 py-2 text-left">Judul</th>
                                     <th class="px-4 py-2 text-left">Tanggal</th>
                                     <th class="px-4 py-2 text-left">Departemen</th>
-                                    <th class="px-4 py-2 text-left">Solver</th>
+                                    {{-- <th class="px-4 py-2 text-left">Solver</th> --}}
                                     <th class="px-4 py-2 text-left">Kategori</th>
                                     <th class="px-4 py-2 text-left">Progress</th>
                                     <th class="px-4 py-2 text-left">Prioritas</th>
@@ -219,7 +219,7 @@
                                         <td class="px-4 py-2">{{ $order->title }}</td>
                                         <td class="px-4 py-2">{{ $order->date ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->department->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->pic->name ?? '-' }}</td>
+                                        {{-- <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td> --}}
                                         <td class="px-4 py-2">{{ $order->category->name ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->progress->status ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->priority->priority ?? '-' }}</td>
@@ -278,7 +278,7 @@
                     item_id: '',
                     description: '',
                     category_id: '',
-                    pic_id: '',
+                    pic: '',
                     reporter: '',
                     progress_id: '',
                     priority_id: ''
@@ -312,7 +312,7 @@
                         item_id: '',
                         description: '',
                         category_id: '',
-                        pic_id: '',
+                        pic: '',
                         reporter: '',
                         progress_id: '',
                         priority_id: ''

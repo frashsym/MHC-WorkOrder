@@ -32,9 +32,4 @@ class Department extends Model
         return $this->hasMany(Item::class, 'department_id');
     }
 
-    public function pic()
-    {
-        return $this->hasMany(Pic::class, 'department_id');
-    }
-
 }

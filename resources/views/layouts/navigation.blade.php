@@ -40,7 +40,6 @@
                             <x-dropdown-link :href="route('department.index')">{{ __('Departmen') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('category.index')">{{ __('Kategori') }}</x-dropdown-link>
                             <x-dropdown-link :href="route('item.index')">{{ __('Objek') }}</x-dropdown-link>
-                            <x-dropdown-link :href="route('pic.index')">{{ __('PIC') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
 

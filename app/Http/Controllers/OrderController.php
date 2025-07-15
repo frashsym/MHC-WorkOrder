@@ -11,7 +11,6 @@ use App\Models\Priority;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
-use App\Models\Pic;
 
 class OrderController extends Controller
 {
@@ -24,7 +23,7 @@ class OrderController extends Controller
             'department',
             'category',
             'item',
-            'pic',
+            'picUser',
             'reporterUser',
             'progress',
             'priority'
@@ -33,7 +32,6 @@ class OrderController extends Controller
         $departments = Department::all();
         $categories = Category::all();
         $items = Item::all();
-        $pics = Pic::all();
         $users = User::all();
         $progresses = Progress::all();
         $priorities = Priority::all();
@@ -43,7 +41,6 @@ class OrderController extends Controller
             'departments',
             'categories',
             'items',
-            'pics',
             'users',
             'progresses',
             'priorities'
@@ -54,7 +51,7 @@ class OrderController extends Controller
     {
         $items = Item::where('department_id', $departmentId)->get();
         $categories = Category::where('department_id', $departmentId)->get();
-        $pics = Pic::where('department_id', $departmentId)->get();
+        $pics = User::where('department_id', $departmentId)->get();
 
         return response()->json([
             'items' => $items,
@@ -69,11 +66,11 @@ class OrderController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'item_id' => 'required|exists:items,id',
+            'pic' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'category_id' => 'required|exists:categories,id',
             'progress_id' => 'required|exists:progresses,id',
             'priority_id' => 'required|exists:priorities,id',
-            'pic_id' => 'required|exists:pics,id',
             'reporter' => 'required|exists:users,id',
         ]);
 
@@ -81,11 +78,11 @@ class OrderController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'item_id' => $request->item_id,
+            'pic' => $request->pic,
             'department_id' => $request->department_id,
             'category_id' => $request->category_id,
             'progress_id' => $request->progress_id,
             'priority_id' => $request->priority_id,
-            'pic_id' => $request->pic_id,
             'date' => now()->toDateString(),
             'time' => now()->format('H:i'),
             'reporter' => $request->reporter,
@@ -108,7 +105,7 @@ class OrderController extends Controller
             'department',
             'category',
             'item',
-            'pic',
+            'picUser',
             'reporterUser',
             'progress',
             'priority'
@@ -123,11 +120,11 @@ class OrderController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'item_id' => 'required|exists:items,id',
+            'pic' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'category_id' => 'required|exists:categories,id',
             'progress_id' => 'required|exists:progresses,id',
             'priority_id' => 'required|exists:priorities,id',
-            'pic_id' => 'required|exists:pics,id',
             'reporter' => 'required|exists:users,id',
         ]);
 
@@ -135,11 +132,11 @@ class OrderController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'item_id' => $request->item_id,
+            'pic' => $request->pic,
             'department_id' => $request->department_id,
             'category_id' => $request->category_id,
             'progress_id' => $request->progress_id,
             'priority_id' => $request->priority_id,
-            'pic_id' => $request->pic_id,
             'reporter' => $request->reporter,
         ]);
 
