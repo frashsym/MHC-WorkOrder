@@ -51,7 +51,11 @@ class OrderController extends Controller
     {
         $items = Item::where('department_id', $departmentId)->get();
         $categories = Category::where('department_id', $departmentId)->get();
-        $pics = User::where('department_id', $departmentId)->get();
+
+        // Tambahkan filter hanya user dengan role_id = 2 (Admin/PIC)
+        $pics = User::where('department_id', $departmentId)
+            ->where('role_id', 2) // hanya role Admin
+            ->get();
 
         return response()->json([
             'items' => $items,

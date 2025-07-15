@@ -205,7 +205,7 @@
                                     <th class="px-4 py-2 text-left">Judul</th>
                                     <th class="px-4 py-2 text-left">Tanggal</th>
                                     <th class="px-4 py-2 text-left">Departemen</th>
-                                    {{-- <th class="px-4 py-2 text-left">Solver</th> --}}
+                                    <th class="px-4 py-2 text-left">Solver</th>
                                     <th class="px-4 py-2 text-left">Kategori</th>
                                     <th class="px-4 py-2 text-left">Progress</th>
                                     <th class="px-4 py-2 text-left">Prioritas</th>
@@ -219,7 +219,7 @@
                                         <td class="px-4 py-2">{{ $order->title }}</td>
                                         <td class="px-4 py-2">{{ $order->date ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->department->name ?? '-' }}</td>
-                                        {{-- <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td> --}}
+                                        <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->category->name ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->progress->status ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->priority->priority ?? '-' }}</td>
@@ -229,7 +229,7 @@
                                                 class="inline-flex items-center px-2 py-1 text-sm text-blue-600 bg-blue-100 hover:bg-blue-200 rounded">
                                                 <i class="fas fa-info-circle mr-1"></i> Info
                                             </a>
-
+                                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
                                             <!-- Tombol Edit -->
                                             <button @click="openEdit({{ $order }})"
                                                 class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 bg-yellow-100 hover:bg-yellow-200 rounded">
@@ -242,6 +242,7 @@
                                                 class="inline-flex items-center px-2 py-1 text-sm text-red-600 bg-red-100 hover:bg-red-200 rounded">
                                                 <i class="fas fa-trash-alt mr-1"></i> Hapus
                                             </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
