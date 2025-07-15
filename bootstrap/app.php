@@ -15,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Daftar middleware global atau grup
         $middleware->alias([
             'auth' => RedirectIfNotAuthenticated::class,
-            'role.access' => \App\Http\Middleware\RoleAccess::class,
+            'superadmin' => \App\Http\Middleware\SuperAdmin::class,
+            'admin' => \App\Http\Middleware\Admin::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

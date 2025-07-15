@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ProgressController;
@@ -22,6 +23,9 @@ Route::middleware(['auth'],)->group(function () {
     Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
 });
 
+// Search route
+Route::get('/search', [SearchController::class, 'global'])->name('global.search');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,14 +37,14 @@ Route::prefix('order')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
     Route::get('/{order}', [OrderController::class, 'show'])->name('order.show'); // Menampilkan detail order
     // Hanya super admin & admin yang bisa mengupdate atau menghapus order
-    Route::middleware(['auth', 'verified', 'role.access:super admin,admin'])->group(function () {
+    Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::put('/{order}', [OrderController::class, 'update'])->name('order.update'); // Mengupdate order
         Route::delete('/{order}', [OrderController::class, 'destroy'])->name('order.destroy'); // Menghapus order
     });
 });
 
 // Master Data - hanya super admin & admin
-Route::middleware(['auth', 'verified', 'role.access:super admin,admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Department
     Route::prefix('department')->group(function () {
@@ -85,8 +89,8 @@ Route::middleware(['auth', 'verified', 'role.access:super admin,admin'])->group(
 });
 
 // Pengguna & Akses - hanya super admin
-Route::middleware(['auth', 'verified', 'role.access:super admin'])->group(function () {
-
+Route::middleware(['auth', 'verified', 'superadmin'])->group(function () {
+    
     // Role
     Route::prefix('role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('role.index');
