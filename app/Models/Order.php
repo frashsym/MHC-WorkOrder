@@ -29,8 +29,13 @@ class Order extends Model
         'description',
         'create_date',
         'create_time',
+        'started_at',
+        'paused_at',
+        'resume_at',
+        'total_duration',
         'progress_id',
         'priority_id',
+        'schedule_order',
     ];
 
     protected static function booted()

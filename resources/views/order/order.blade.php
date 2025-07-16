@@ -79,7 +79,8 @@
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Deskripsi</label>
                                                     <textarea name="description" x-model="formData.description" rows="3"
-                                                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
+                                                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                                                        required></textarea>
                                                 </div>
 
                                                 <!-- Kategori -->
@@ -131,6 +132,16 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                </div>
+
+                                                <!-- Schedule Order Date (Tampil hanya jika progress_id == 2) -->
+                                                <div x-show="formData.progress_id == 2"
+                                                    class="col-span-1 sm:col-span-2">
+                                                    <label class="block text-sm font-medium text-gray-700">Tanggal
+                                                        Penjadwalan</label>
+                                                    <input type="date" name="schedule_order"
+                                                        x-model="formData.schedule_order"
+                                                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                                 </div>
 
                                                 <!-- Prioritas -->
@@ -228,25 +239,23 @@
                                                 <i class="fas fa-info-circle mr-1"></i> Info
                                             </a>
                                             @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
-                                            <!-- Tombol Edit -->
-                                            <button @click="openEdit({{ $order }})"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 bg-yellow-100 hover:bg-yellow-200 rounded">
-                                                <i class="fas fa-edit mr-1"></i> Edit
-                                            </button>
+                                                <!-- Tombol Edit -->
+                                                <button @click="openEdit({{ $order }})"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 bg-yellow-100 hover:bg-yellow-200 rounded">
+                                                    <i class="fas fa-edit mr-1"></i> Edit
+                                                </button>
 
-                                            <!-- Tombol Delete -->
-                                            <button type="button"
-                                                @click="deleteModal = true; deleteId = {{ $order->id }}"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 bg-red-100 hover:bg-red-200 rounded">
-                                                <i class="fas fa-trash-alt mr-1"></i> Hapus
-                                            </button>
+                                                <!-- Tombol Delete -->
+                                                <button type="button" @click="deleteModal = true; deleteId = {{ $order->id }}"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-red-600 bg-red-100 hover:bg-red-200 rounded">
+                                                    <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                                </button>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="10"
-                                            class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+                                        <td colspan="10" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
                                             Tidak ada order tersedia.
                                         </td>
                                     </tr>
@@ -286,7 +295,7 @@
                 categories: [],
                 pics: [],
 
-                init() {},
+                init() { },
 
                 openCreate() {
                     this.resetForm();

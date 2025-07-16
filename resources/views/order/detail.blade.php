@@ -70,7 +70,12 @@
                             <strong>Durasi Saat Di-Hold:</strong> {{ gmdate('H:i:s', $durasiSaatHold) }}
                         </div>
                     @endif
-                    
+                    @if ($order->progress_id == 2 && $order->schedule_order)
+                        <div>
+                            <strong>Dijadwalkan Pada:</strong>
+                            {{ \Carbon\Carbon::parse($order->schedule_order)->format('Y-m-d') }}
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mt-6">
