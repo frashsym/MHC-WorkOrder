@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\Department;
 use App\Models\Priority;
 use App\Models\Category;
@@ -18,18 +19,31 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
+        'title',
+        'letter_number',
         'department_id',
         'category_id',
         'item_id',
         'pic',
         'reporter',
-        'title',
         'description',
-        'date',
-        'time',
+        'create_date',
+        'create_time',
         'progress_id',
         'priority_id',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($order) {
+            // Jika belum ada letter_number, generate otomatis
+            if (!$order->letter_number) {
+                $order->update([
+                    'letter_number' => 'ORD-' . str_pad($order->id, 5, '0', STR_PAD_LEFT),
+                ]);
+            }
+        });
+    }
 
     public function department()
     {

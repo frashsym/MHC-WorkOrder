@@ -97,7 +97,7 @@
                                                 <!-- PIC -->
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700">PIC</label>
-                                                    <select name="pic_id" x-model="formData.pic_id"
+                                                    <select name="pic" x-model="formData.pic"
                                                         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                                                         required>
                                                         <template x-for="pic in pics" :key="pic.id">
@@ -121,7 +121,7 @@
                                                 </div>
 
                                                 <!-- Progress -->
-                                                <div>
+                                                <div x-show="isEditMode">
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Progress</label>
                                                     <select name="progress_id" x-model="formData.progress_id"
@@ -203,12 +203,11 @@
                                 <tr>
                                     <th class="px-4 py-2 text-left">No</th>
                                     <th class="px-4 py-2 text-left">Judul</th>
+                                    <th class="px-4 py-2 text-left">Nomor Surat</th>
                                     <th class="px-4 py-2 text-left">Tanggal</th>
                                     <th class="px-4 py-2 text-left">Departemen</th>
                                     <th class="px-4 py-2 text-left">Solver</th>
                                     <th class="px-4 py-2 text-left">Kategori</th>
-                                    <th class="px-4 py-2 text-left">Progress</th>
-                                    <th class="px-4 py-2 text-left">Prioritas</th>
                                     <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
@@ -217,12 +216,11 @@
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                                         <td class="px-4 py-2">{{ $orders->firstItem() + $key }}</td>
                                         <td class="px-4 py-2">{{ $order->title }}</td>
-                                        <td class="px-4 py-2">{{ $order->date ?? '-' }}</td>
+                                        <td class="px-4 py-2">{{ $order->letter_number }}</td>
+                                        <td class="px-4 py-2">{{ $order->create_date ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->department->name ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $order->category->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->progress->status ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->priority->priority ?? '-' }}</td>
                                         <td class="px-4 py-2 space-x-2">
                                             <!-- Tombol Info -->
                                             <a href="{{ route('order.show', $order->id) }}"
