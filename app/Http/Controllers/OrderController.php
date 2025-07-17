@@ -64,6 +64,39 @@ class OrderController extends Controller
         ]);
     }
 
+    public function filter(Request $request)
+    {
+        $query = Order::with(['department', 'picUser', 'category']);
+
+        if ($request->filled('department_id')) {
+            $query->where('department_id', $request->department_id);
+        }
+
+        if ($request->date_range && $request->date_range !== 'custom') {
+            $date = now();
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('create_date', $date->toDateString());
+                    break;
+                case 'week':
+                    $query->where('create_date', '>=', $date->subWeek());
+                    break;
+                case 'month':
+                    $query->where('create_date', '>=', $date->subMonth());
+                    break;
+                case 'year':
+                    $query->where('create_date', '>=', $date->subYear());
+                    break;
+            }
+        } elseif ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('create_date', [$request->start_date, $request->end_date]);
+        }
+
+        $orders = $query->latest()->paginate(10); // atau get() kalau tidak paginasi
+
+        return view('order._table', compact('orders'))->render();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

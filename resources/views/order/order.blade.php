@@ -214,63 +214,63 @@
                             </div>
                         </div>
                     </div>
+                    <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4 mb-4">
+                        <!-- Filter Departemen -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Departemen</label>
+                            <select x-model="filters.department_id"
+                                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                <option value="">Semua</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="overflow-x-auto">
-                        <table
-                            class="min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
-                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Judul</th>
-                                    <th class="px-4 py-2 text-left">Nomor Surat</th>
-                                    <th class="px-4 py-2 text-left">Tanggal</th>
-                                    <th class="px-4 py-2 text-left">Departemen</th>
-                                    <th class="px-4 py-2 text-left">Solver</th>
-                                    <th class="px-4 py-2 text-left">Kategori</th>
-                                    <th class="px-4 py-2 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white">
-                                @forelse ($orders as $key => $order)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-4 py-2">{{ $orders->firstItem() + $key }}</td>
-                                        <td class="px-4 py-2">{{ $order->title }}</td>
-                                        <td class="px-4 py-2">{{ $order->letter_number }}</td>
-                                        <td class="px-4 py-2">{{ $order->create_date ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->department->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $order->category->name ?? '-' }}</td>
-                                        <td class="px-4 py-2 space-x-2">
-                                            <!-- Tombol Info -->
-                                            <a href="{{ route('order.show', $order->id) }}"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-blue-600 bg-blue-100 hover:bg-blue-200 rounded">
-                                                <i class="fas fa-info-circle mr-1"></i> Info
-                                            </a>
-                                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
-                                                <!-- Tombol Edit -->
-                                                <button @click="openEdit({{ $order }})"
-                                                    class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 bg-yellow-100 hover:bg-yellow-200 rounded">
-                                                    <i class="fas fa-edit mr-1"></i> Edit
-                                                </button>
+                        <!-- Filter Waktu -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Waktu</label>
+                            <select x-model="filters.date_range" @change="handleDateRangeChange"
+                                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                <option value="">Semua</option>
+                                <option value="today">Hari Ini</option>
+                                <option value="week">1 Minggu</option>
+                                <option value="month">1 Bulan</option>
+                                <option value="year">1 Tahun</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
 
-                                                <!-- Tombol Delete -->
-                                                <button type="button" @click="deleteModal = true; deleteId = {{ $order->id }}"
-                                                    class="inline-flex items-center px-2 py-1 text-sm text-red-600 bg-red-100 hover:bg-red-200 rounded">
-                                                    <i class="fas fa-trash-alt mr-1"></i> Hapus
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="10" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
-                                            Tidak ada order tersedia.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                        <!-- Tanggal Custom -->
+                        <template x-if="filters.date_range === 'custom'">
+                            <div class="flex gap-2">
+                                <div>
+                                    <label class="block text-sm text-gray-700 dark:text-gray-300">Dari</label>
+                                    <input type="date" x-model="filters.start_date"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-700 dark:text-gray-300">Sampai</label>
+                                    <input type="date" x-model="filters.end_date"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Tombol Cari -->
+                        <div>
+                            <button @click="fetchOrders"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                                Cari
+                            </button>
+                        </div>
                     </div>
+
+                    {{-- Table --}}
+                    <div id="order-table" class="overflow-x-auto">
+                        @include('order._table', ['orders' => $orders])
+                    </div>
+
                 </div>
 
                 <div class="mt-4">
@@ -281,6 +281,33 @@
     </div>
 
     <script>
+        // Fungsi untuk mengelola filter order
+        function orderFilter() {
+            return {
+                filters: {
+                    department_id: '',
+                    date_range: '',
+                    start_date: '',
+                    end_date: '',
+                },
+                handleDateRangeChange() {
+                    if (this.filters.date_range !== 'custom') {
+                        this.filters.start_date = '';
+                        this.filters.end_date = '';
+                    }
+                },
+                fetchOrders() {
+                    let params = new URLSearchParams(this.filters).toString();
+                    fetch(`/order/filter?${params}`)
+                        .then(res => res.text())
+                        .then(html => {
+                            document.getElementById('order-table').innerHTML = html;
+                        });
+                }
+            }
+        }
+
+        // Fungsi untuk mengelola form order
         function orderForm() {
             return {
                 modalOpen: false,

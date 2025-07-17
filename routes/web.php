@@ -35,6 +35,7 @@ Route::get('/dashboard', function () {
 Route::prefix('order')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('order.index'); // Menampilkan daftar order
     Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
+    Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
     Route::get('/{order}', [OrderController::class, 'show'])->name('order.show'); // Menampilkan detail order
     // Hanya super admin & admin yang bisa mengupdate atau menghapus order
     Route::middleware(['auth', 'verified', 'admin'])->group(function () {
@@ -90,7 +91,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
 // Pengguna & Akses - hanya super admin
 Route::middleware(['auth', 'verified', 'superadmin'])->group(function () {
-    
+
     // Role
     Route::prefix('role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('role.index');
