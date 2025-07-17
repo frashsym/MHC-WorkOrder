@@ -163,14 +163,15 @@ class OrderController extends Controller
             'progress_id' => 'required|exists:progresses,id',
             'priority_id' => 'required|exists:priorities,id',
             'reporter' => 'required|exists:users,id',
-            'schedule_order' => 'nullable|date', // ✅ tambahkan validasi schedule_order
+            'start_date' => 'nullable|date',
+            'due_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
         $prevProgress = $order->progress_id;
         $newProgress = $request->progress_id;
         $now = now();
 
-        // Logika progres seperti sebelumnya
+        // Logika progres
         if ($prevProgress == 1 && $newProgress == 3) {
             $order->started_at = $now;
             $order->resume_at = $now;
@@ -195,10 +196,13 @@ class OrderController extends Controller
             $order->resume_at = null;
         }
 
-        // Set nilai schedule_order jika progress_id == 2
-        $scheduleOrder = null;
-        if ($newProgress == 2 && $request->filled('schedule_order')) {
-            $scheduleOrder = $request->schedule_order;
+        // Set estimasi pengerjaan jika progress_id == 2
+        $startDate = null;
+        $dueDate = null;
+
+        if ($newProgress == 2) {
+            $startDate = $request->start_date;
+            $dueDate = $request->due_date;
         }
 
         // Update kolom lainnya
@@ -216,7 +220,8 @@ class OrderController extends Controller
             'paused_at' => $order->paused_at,
             'resume_at' => $order->resume_at,
             'total_duration' => $order->total_duration,
-            'schedule_order' => $scheduleOrder, // ✅ Simpan nilai schedule_order
+            'start_date' => $startDate,
+            'due_date' => $dueDate,
         ]);
 
         return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');

@@ -29,7 +29,8 @@ return new class extends Migration
             $table->integer('total_duration')->default(0);
             $table->foreignId('progress_id')->nullable()->constrained('progresses')->onDelete('set null');
             $table->foreignId('priority_id')->nullable()->constrained('priorities')->onDelete('set null');
-            $table->date('schedule_order')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->timestamps();
         });
     }

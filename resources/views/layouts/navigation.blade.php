@@ -2,6 +2,7 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
+
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -22,35 +23,12 @@
                     </x-nav-link>
 
                     @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
-                    {{-- Dropdown: Master Data --}}
-                    <x-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                            <button
-                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
-                                {{ __('Master Data') }}
-                                <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('department.index')">{{ __('Departmen') }}</x-dropdown-link>
-                            <x-dropdown-link :href="route('category.index')">{{ __('Kategori') }}</x-dropdown-link>
-                            <x-dropdown-link :href="route('item.index')">{{ __('Objek') }}</x-dropdown-link>
-                        </x-slot>
-                    </x-dropdown>
-
-                    @if (Auth::user()->role_id === 1)
-                        {{-- Dropdown: Pengguna & Akses --}}
+                        {{-- Dropdown: Master Data --}}
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button
                                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
-                                    {{ __('Pengguna & Akses') }}
+                                    {{ __('Master Data') }}
                                     <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
@@ -61,32 +39,56 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('role.index')">{{ __('Role') }}</x-dropdown-link>
-                                <x-dropdown-link :href="route('user.index')">{{ __('User') }}</x-dropdown-link>
+                                <x-dropdown-link :href="route('department.index')">{{ __('Departmen') }}</x-dropdown-link>
+                                <x-dropdown-link :href="route('category.index')">{{ __('Kategori') }}</x-dropdown-link>
+                                <x-dropdown-link :href="route('item.index')">{{ __('Objek') }}</x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+
+                        @if (Auth::user()->role_id === 1)
+                            {{-- Dropdown: Pengguna & Akses --}}
+                            <x-dropdown align="left" width="48">
+                                <x-slot name="trigger">
+                                    <button
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
+                                        {{ __('Pengguna & Akses') }}
+                                        <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link :href="route('role.index')">{{ __('Role') }}</x-dropdown-link>
+                                    <x-dropdown-link :href="route('user.index')">{{ __('User') }}</x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+                        @endif
+
+                        {{-- Dropdown: Status --}}
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <button
+                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
+                                    {{ __('Status') }}
+                                    <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('priority.index')">{{ __('Prioritas') }}</x-dropdown-link>
+                                <x-dropdown-link :href="route('progress.index')">{{ __('Progress') }}</x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     @endif
-
-                    {{-- Dropdown: Status --}}
-                    <x-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                            <button
-                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
-                                {{ __('Status') }}
-                                <svg class="ms-1 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('priority.index')">{{ __('Prioritas') }}</x-dropdown-link>
-                            <x-dropdown-link :href="route('progress.index')">{{ __('Progress') }}</x-dropdown-link>
-                        </x-slot>
-                    </x-dropdown>
                 </div>
             </div>
 
@@ -119,13 +121,12 @@
                             @csrf
 
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                                                                    this.closest('form').submit();">
                                 {{ __('Keluar') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
                 </x-dropdown>
-                @endif
             </div>
 
             <!-- Hamburger -->
@@ -176,4 +177,11 @@
             </div>
         </div>
     </div>
+    {{-- <form action="{{ route('global.search') }}" method="GET" class="flex items-center space-x-2">
+        <input type="text" name="q" placeholder="Cari data..." class="rounded-md px-2 py-1 border text-sm"
+            value="{{ request('q') }}">
+        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+            Cari
+        </button>
+    </form> --}}
 </nav>

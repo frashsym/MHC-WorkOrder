@@ -35,7 +35,8 @@ class Order extends Model
         'total_duration',
         'progress_id',
         'priority_id',
-        'schedule_order',
+        'start_date',
+        'due_date',
     ];
 
     protected static function booted()

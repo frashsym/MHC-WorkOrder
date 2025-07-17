@@ -134,14 +134,22 @@
                                                     </select>
                                                 </div>
 
-                                                <!-- Schedule Order Date (Tampil hanya jika progress_id == 2) -->
+                                                <!-- Estimasi Pengerjaan (Tampil hanya jika progress_id == 2) -->
                                                 <div x-show="formData.progress_id == 2"
-                                                    class="col-span-1 sm:col-span-2">
-                                                    <label class="block text-sm font-medium text-gray-700">Tanggal
-                                                        Penjadwalan</label>
-                                                    <input type="date" name="schedule_order"
-                                                        x-model="formData.schedule_order"
-                                                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    class="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700">Tanggal
+                                                            Mulai Pengerjaan</label>
+                                                        <input type="date" name="start_date"
+                                                            x-model="formData.start_date"
+                                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700">Tanggal
+                                                            Estimasi Selesai</label>
+                                                        <input type="date" name="due_date" x-model="formData.due_date"
+                                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    </div>
                                                 </div>
 
                                                 <!-- Prioritas -->
