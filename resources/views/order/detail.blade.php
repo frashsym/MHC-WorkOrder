@@ -7,15 +7,21 @@
 
     <div class="py-8">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6" id="print-area">
+                <div class="flex justify-end print:hidden">
+                    <button onclick="printOrder()"
+                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm">
+                        <i class="fa-solid fa-print"></i> Print
+                    </button>
+                </div>
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                     {{ $order->title }}
                 </h3>
                 <p class="text-sm text-gray-700 dark:text-gray-300 mb-6">
-                    <strong>No Surat:</strong> {{ $order->letter_number }}
+                    <strong>No Order:</strong> {{ $order->letter_number }}
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800 dark:text-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800 dark:text-gray-200 print-grid-2">
                     <div><strong>Deskripsi:</strong> {{ $order->description }}</div>
                     <div><strong>Objek:</strong> {{ $order->item->name ?? '-' }}</div>
                     <div><strong>Departemen:</strong> {{ $order->department->name ?? '-' }}</div>
@@ -82,7 +88,7 @@
                     @endif
                 </div>
 
-                <div class="mt-6">
+                <div class="mt-6 print:hidden">
                     <a href="{{ route('order.index') }}"
                         class="inline-block bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded">
                         Kembali
@@ -91,6 +97,38 @@
             </div>
         </div>
     </div>
+
+    <style>
+        @media print {
+            @page {
+                size: landscape;
+                margin: 20mm;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: Arial, sans-serif;
+            }
+
+            .dark,
+            .dark * {
+                background-color: white !important;
+                color: black !important;
+            }
+
+            .print\:hidden {
+                display: none !important;
+            }
+
+            /* Force grid to stay 2 columns in print */
+            .print-grid-2 {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1rem;
+            }
+        }
+    </style>
 
     {{-- Real-time Timer --}}
     @if ($order->progress_id == 3 && $order->resume_at)
@@ -113,4 +151,10 @@
             setInterval(updateDuration, 1000);
         </script>
     @endif
+    <script>
+        function printOrder() {
+            window.print(); // langsung print halaman ini
+        }
+    </script>
+
 </x-app-layout>
