@@ -16,15 +16,12 @@ use App\Http\Controllers\DepartmentController;
 //     return view('welcome');
 // })->name('index');
 
-Route::middleware(['auth'],)->group(function () {
+Route::middleware(['auth'], )->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
 });
-
-// Search route
-Route::get('/search', [SearchController::class, 'global'])->name('global.search');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

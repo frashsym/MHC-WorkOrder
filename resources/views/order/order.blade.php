@@ -11,14 +11,87 @@
 
                 <!-- Bungkus tombol + modal dalam 1 x-data -->
                 <div x-data="orderForm()" x-init="init()" class="mb-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Daftar Order</h3>
-                        {{-- Tombol Create --}}
-                        <button @click="openCreate"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                            <i class="fa-solid fa-plus"></i> Tambah Order
-                        </button>
+                    <div class="flex justify-between items-start flex-wrap md:flex-nowrap gap-4 mb-4">
+                        <!-- Kiri: Judul -->
+                        <div class="flex-shrink-0">
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-2">Daftar Order</h3>
+                        </div>
+
+                        <!-- Tengah: Filter -->
+                        <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4">
+                            <!-- Filter Departemen -->
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Departemen</label>
+                                <select x-model="filters.department_id"
+                                    class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                    <option value="">Semua</option>
+                                    @foreach ($departments as $dept)
+                                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Filter Objek -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Objek</label>
+                                <select x-model="filters.item_id"
+                                    class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                    <option value="">Semua</option>
+                                    <template x-for="item in filteredItems" :key="item.id">
+                                        <option :value="item.id" x-text="item.name"></option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <!-- Filter Waktu -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Waktu</label>
+                                <select x-model="filters.date_range" @change="handleDateRangeChange"
+                                    class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                    <option value="">Semua</option>
+                                    <option value="today">Hari Ini</option>
+                                    <option value="week">1 Minggu</option>
+                                    <option value="month">1 Bulan</option>
+                                    <option value="year">1 Tahun</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+
+                            <!-- Tanggal Custom -->
+                            <template x-if="filters.date_range === 'custom'">
+                                <div class="flex gap-2">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 dark:text-gray-300">Dari</label>
+                                        <input type="date" x-model="filters.start_date"
+                                            class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 dark:text-gray-300">Sampai</label>
+                                        <input type="date" x-model="filters.end_date"
+                                            class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Tombol Cari -->
+                            <div>
+                                <button @click="fetchOrders"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                                    Cari
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Kanan: Tombol Tambah -->
+                        <div class="flex-shrink-0 mt-2">
+                            <button @click="openCreate"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                                <i class="fa-solid fa-plus"></i> Tambah Order
+                            </button>
+                        </div>
                     </div>
+
                     <br>
 
                     <!-- Modal Dinamis -->
@@ -214,57 +287,6 @@
                             </div>
                         </div>
                     </div>
-                    <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4 mb-4">
-                        <!-- Filter Departemen -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Departemen</label>
-                            <select x-model="filters.department_id"
-                                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option value="">Semua</option>
-                                @foreach ($departments as $dept)
-                                    <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Filter Waktu -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Waktu</label>
-                            <select x-model="filters.date_range" @change="handleDateRangeChange"
-                                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option value="">Semua</option>
-                                <option value="today">Hari Ini</option>
-                                <option value="week">1 Minggu</option>
-                                <option value="month">1 Bulan</option>
-                                <option value="year">1 Tahun</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                        </div>
-
-                        <!-- Tanggal Custom -->
-                        <template x-if="filters.date_range === 'custom'">
-                            <div class="flex gap-2">
-                                <div>
-                                    <label class="block text-sm text-gray-700 dark:text-gray-300">Dari</label>
-                                    <input type="date" x-model="filters.start_date"
-                                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-700 dark:text-gray-300">Sampai</label>
-                                    <input type="date" x-model="filters.end_date"
-                                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                </div>
-                            </div>
-                        </template>
-
-                        <!-- Tombol Cari -->
-                        <div>
-                            <button @click="fetchOrders"
-                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
-                                Cari
-                            </button>
-                        </div>
-                    </div>
 
                     {{-- Table --}}
                     <div id="order-table" class="overflow-x-auto">
@@ -286,9 +308,17 @@
             return {
                 filters: {
                     department_id: '',
+                    item_id: '',
                     date_range: '',
                     start_date: '',
                     end_date: '',
+                },
+                allItems: @json($items), // Kirim semua item dari controller
+                get filteredItems() {
+                    if (!this.filters.department_id) {
+                        return this.allItems;
+                    }
+                    return this.allItems.filter(item => item.department_id == this.filters.department_id);
                 },
                 handleDateRangeChange() {
                     if (this.filters.date_range !== 'custom') {

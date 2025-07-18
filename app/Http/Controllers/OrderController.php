@@ -68,10 +68,17 @@ class OrderController extends Controller
     {
         $query = Order::with(['department', 'picUser', 'category']);
 
+        // Filter berdasarkan departemen
         if ($request->filled('department_id')) {
             $query->where('department_id', $request->department_id);
         }
 
+        // Filter berdasarkan objek
+        if ($request->filled('item_id')) {
+            $query->where('item_id', $request->item_id);
+        }
+
+        // Filter berdasarkan range waktu
         if ($request->date_range && $request->date_range !== 'custom') {
             $date = now();
             switch ($request->date_range) {
@@ -92,7 +99,8 @@ class OrderController extends Controller
             $query->whereBetween('create_date', [$request->start_date, $request->end_date]);
         }
 
-        $orders = $query->latest()->paginate(10); // atau get() kalau tidak paginasi
+        // Ambil data dengan urutan terbaru, bisa pakai paginate atau get
+        $orders = $query->latest()->paginate(10); // atau get() jika tidak perlu pagination
 
         return view('order._table', compact('orders'))->render();
     }
