@@ -5,7 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ProgressController;
@@ -23,9 +23,9 @@ Route::middleware(['auth'], )->group(function () {
     Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // API route to fetch dependent data based on department ID
 // Order routes

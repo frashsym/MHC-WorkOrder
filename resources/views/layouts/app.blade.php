@@ -18,6 +18,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -41,7 +42,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             if (typeof Swal === 'undefined') {
                 console.error('SweetAlert2 tidak dimuat dengan benar.');
                 return;
@@ -58,20 +59,20 @@
                 });
             @endif
 
-            // Error messages
-            @if ($errors->any())
-                let errorMessages = '';
-                @foreach ($errors->all() as $error)
-                    errorMessages += "{{ $error }}\n";
-                @endforeach
+                // Error messages
+                @if ($errors->any())
+                    let errorMessages = '';
+                    @foreach ($errors->all() as $error)
+                        errorMessages += "{{ $error }}\n";
+                    @endforeach
 
-                Swal.fire({
-                    title: 'Oops!',
-                    text: errorMessages,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            @endif
+                    Swal.fire({
+                        title: 'Oops!',
+                        text: errorMessages,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                @endif
         });
     </script>
 
