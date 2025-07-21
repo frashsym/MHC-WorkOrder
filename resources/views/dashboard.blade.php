@@ -35,14 +35,16 @@
                 </form>
 
                 <canvas id="orderChart" height="120"></canvas>
+                <div id="orderTableContainer" class="mt-6"></div>
 
                 <script>
+                    const selectedMonth = {{ $selectedMonth }};
+                    const selectedYear = {{ $selectedYear }};
                     const ctx = document.getElementById('orderChart').getContext('2d');
-                    const rawLabels = @json($rawLabels); // Untuk tooltip
-                    const labels = @json($labels); // Untuk sumbu X
-
+                    const rawLabels = @json($rawLabels);
+                    const labels = @json($labels);
                     const datasets = @json($chartData).map((set, index) => {
-                        const colors = ['#007bff', '#28a745', '#ffc107'];
+                        const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'];
                         return {
                             label: set.label,
                             data: set.data,
@@ -68,21 +70,29 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        title: (tooltipItems) => {
-                                            const index = tooltipItems[0].dataIndex;
-                                            return rawLabels[index]; // Tampilkan "22 Juli 2025"
-                                        },
-                                        label: (tooltipItem) => {
-                                            return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`;
-                                        }
+                                        title: (tooltipItems) => rawLabels[tooltipItems[0].dataIndex],
+                                        label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
                                 }
                             },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    stepSize: 1,
-                                    suggestedMax: 10
+                            onClick: async (event, elements) => {
+                                if (!elements.length) return;
+
+                                const point = elements[0];
+                                const datasetIndex = point.datasetIndex;
+                                const dataIndex = point.index;
+
+                                const department = datasets[datasetIndex].label;
+                                const day = labels[dataIndex].toString().padStart(2, '0');
+                                const month = selectedMonth.toString().padStart(2, '0');
+                                const date = `${selectedYear}-${month}-${day}`;
+
+                                try {
+                                    const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" + encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
+                                    const html = await res.text();
+                                    document.getElementById('orderTableContainer').innerHTML = html;
+                                } catch (err) {
+                                    console.error('Gagal mengambil data:', err);
                                 }
                             }
                         }

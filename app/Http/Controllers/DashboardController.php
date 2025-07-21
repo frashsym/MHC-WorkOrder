@@ -59,5 +59,20 @@ class DashboardController extends Controller
             'selectedYear'
         ));
     }
-    
+
+    public function getOrdersByDateAndDepartment()
+    {
+        $date = request('date');
+        $department = request('department');
+
+        $orders = Order::with(['department', 'category', 'picUser'])
+            ->whereDate('created_at', $date)
+            ->whereHas('department', function ($q) use ($department) {
+                $q->where('name', $department);
+            })
+            ->get();
+
+        return view('partials.orders-table', compact('orders'))->render(); // kirim potongan view
+    }
+
 }
