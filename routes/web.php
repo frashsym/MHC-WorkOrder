@@ -23,9 +23,10 @@ Route::middleware(['auth'], )->group(function () {
     Route::get('/api/dependent-data/{departmentId}', [OrderController::class, 'getDependentData']);
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Dashboard routes
+Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 // API route to fetch dependent data based on department ID
 // Order routes

@@ -8,6 +8,32 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <form method="GET" action="{{ route('dashboard') }}"
+                    class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-wrap items-center gap-2">
+                    <label class="text-gray-700 dark:text-gray-200">Pilih Bulan:</label>
+                    <select name="month" class="rounded p-1 text-sm">
+                        @foreach(range(1, 12) as $m)
+                            <option value="{{ $m }}" {{ $m == $selectedMonth ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <label class="text-gray-700 dark:text-gray-200">Tahun:</label>
+                    <select name="year" class="rounded p-1 text-sm">
+                        @for ($y = now()->year - 2; $y <= now()->year + 1; $y++)
+                            <option value="{{ $y }}" {{ $y == $selectedYear ? 'selected' : '' }}>
+                                {{ $y }}
+                            </option>
+                        @endfor
+                    </select>
+
+                    <button type="submit"
+                        class="ml-2 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Tampilkan
+                    </button>
+                </form>
+
                 <canvas id="orderChart" height="120"></canvas>
 
                 <script>

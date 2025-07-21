@@ -16,7 +16,7 @@ class OrderSeeder extends Seeder
         $faker = \Faker\Factory::create();
         $datesUsed = []; // untuk melacak berapa banyak order tiap tanggal
 
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 80; $i++) {
             // Pilih tanggal antara 1 - 31 Juli 2025
             do {
                 $randomDay = rand(1, 31);

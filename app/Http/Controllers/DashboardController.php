@@ -10,23 +10,25 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Atur locale Indonesia untuk Carbon
         Carbon::setLocale('id');
 
+        $selectedMonth = request()->get('month', Carbon::now()->month);
+        $selectedYear = request()->get('year', Carbon::now()->year);
+
+        $startOfMonth = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
         $today = Carbon::today();
-        $startOfMonth = $today->copy()->startOfMonth();
 
-        // Ambil semua departemen
+        // Jika bulan/tahun saat ini, batas sampai hari ini. Jika bulan lampau, sampai akhir bulan.
+        $lastDay = ($startOfMonth->isSameMonth($today)) ? $today : $endOfMonth;
+
         $departments = Department::all();
-
-        // Siapkan data grafik per departemen
         $chartData = [];
 
         foreach ($departments as $department) {
             $dailyCounts = [];
 
-            // Iterasi dari tanggal 1 sampai hari ini
-            for ($date = $startOfMonth->copy(); $date->lte($today); $date->addDay()) {
+            for ($date = $startOfMonth->copy(); $date->lte($lastDay); $date->addDay()) {
                 $count = Order::whereDate('created_at', $date)
                     ->where('department_id', $department->id)
                     ->count();
@@ -40,15 +42,22 @@ class DashboardController extends Controller
             ];
         }
 
-        // Label X axis & tooltip
-        $labels = [];      // hanya tanggal: 1, 2, 3, ...
-        $rawLabels = [];   // lengkap: 22 Juli 2025, ...
+        $labels = [];
+        $rawLabels = [];
 
-        for ($date = $startOfMonth->copy(); $date->lte($today); $date->addDay()) {
-            $labels[] = $date->format('j'); // "1", "2", ..., hari ini
-            $rawLabels[] = $date->translatedFormat('d F Y'); // e.g. "22 Juli 2025"
+        for ($date = $startOfMonth->copy(); $date->lte($lastDay); $date->addDay()) {
+            $labels[] = $date->format('j');
+            $rawLabels[] = $date->translatedFormat('d F Y');
         }
 
-        return view('dashboard', compact('chartData', 'labels', 'rawLabels'));
+        // Untuk default value di view
+        return view('dashboard', compact(
+            'chartData',
+            'labels',
+            'rawLabels',
+            'selectedMonth',
+            'selectedYear'
+        ));
     }
+    
 }
