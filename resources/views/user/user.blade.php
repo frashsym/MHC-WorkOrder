@@ -161,7 +161,7 @@
                                         <td class="px-4 py-2">{{ $user->department->name ?? '-' }}</td>
                                         <td class="px-4 py-2 space-x-2">
                                             <button
-                                                @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }} })"
+                                                @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }}, department_id: {{ $user->department_id }} })"
                                                 class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
