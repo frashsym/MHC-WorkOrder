@@ -14,26 +14,29 @@ class UserController extends Controller
     {
         $users = User::with('role')->latest()->paginate(10);
         $roles = Role::all();
+        $departments = Department::all();
 
-        return view('user.user', compact('users', 'roles'));
+        return view('user.user', compact('users', 'roles', 'departments'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'username'      => 'required|string|max:255|unique:users',
-            'role_id'       => 'required|exists:roles,id',
-            'email'         => 'required|email|unique:users',
-            'password'      => 'required|string|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'role_id' => 'required|exists:roles,id',
+            'email' => 'required|email|unique:users',
+            'department_id' => 'required|exists:department,id',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
-            'name'          => $request->name,
-            'username'      => $request->username,
-            'role_id'       => $request->role_id,
-            'email'         => $request->email,
-            'password'      => bcrypt($request->password),
+            'name' => $request->name,
+            'username' => $request->username,
+            'role_id' => $request->role_id,
+            'email' => $request->email,
+            'department_id' => $request->department_id,
+            'password' => bcrypt($request->password),
         ]);
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan!');
@@ -46,6 +49,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255',
             'email' => 'required|email',
             'role_id' => 'required|exists:roles,id',
+            'department_id' => 'required|exists:departments,id',
         ];
 
         // Validasi password hanya jika diisi
@@ -55,7 +59,7 @@ class UserController extends Controller
 
         $validated = $request->validate($rules);
 
-        $data = $request->only('name', 'username', 'email', 'role_id');
+        $data = $request->only('name', 'username', 'email', 'role_id', 'department_id');
 
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->password);

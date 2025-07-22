@@ -64,6 +64,17 @@
                                         </div>
 
                                         <div class="mb-4">
+                                            <label class="block text-sm font-medium text-gray-700">Department</label>
+                                            <select name="department_id" x-model="formData.department_id" required
+                                                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="">-- Pilih --</option>
+                                                @foreach ($departments as $department)
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-4">
                                             <label class="block text-sm font-medium text-gray-700">Password</label>
                                             <input type="password" name="password" x-model="formData.password"
                                                 :required="!isEditMode"
@@ -147,7 +158,7 @@
                                         <td class="px-4 py-2">{{ $user->username }}</td>
                                         <td class="px-4 py-2">{{ $user->role->role ?? '-' }}</td>
                                         <td class="px-4 py-2">{{ $user->email }}</td>
-                                        <td class="px-4 py-2">{{ $user->department->name }}</td>
+                                        <td class="px-4 py-2">{{ $user->department->name ?? '-' }}</td>
                                         <td class="px-4 py-2 space-x-2">
                                             <button
                                                 @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }} })"
@@ -187,6 +198,8 @@
                     username: '',
                     email: '',
                     role_id: '',
+                    role_id: '',
+                    department_id: '',
                 },
                 openCreate() {
                     this.resetForm();
@@ -207,6 +220,7 @@
                         username: '',
                         email: '',
                         role_id: '',
+                        department_id: '',
                     };
                 }
             }

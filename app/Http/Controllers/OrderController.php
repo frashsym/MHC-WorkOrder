@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifyReporterOrderCancelled;
+use App\Mail\NotifyReporterOrderFinished;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyPicOrderCreated;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Category;
@@ -133,6 +137,11 @@ class OrderController extends Controller
             'total_duration' => 0,
         ]);
 
+        // Kirim email ke PIC setelah order dibuat
+        if ($order->picUser && $order->picUser->email) {
+            Mail::to($order->picUser->email)->send(new NotifyPicOrderCreated($order));
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -156,17 +165,24 @@ class OrderController extends Controller
             'priority'
         ]);
 
-        // Ambil total_duration awal
+        // Tambahan: untuk modal edit
+        $items = Item::all();
+        $categories = Category::all();
+        $departments = Department::all();
+        $pics = User::where('role_id', 2)->get(); // Role 2 = Admin/PIC
+        $users = User::all();
+        $progresses = Progress::all();
+        $priorities = Priority::all();
+
+        // Hitung total durasi jika sedang berjalan
         $totalSeconds = $order->total_duration;
 
-        // Tambahkan waktu berjalan jika status saat ini "On Progress"
         if ($order->progress_id == 3 && $order->resume_at) {
             $now = now();
             $elapsed = \Carbon\Carbon::parse($order->resume_at)->diffInSeconds($now);
             $totalSeconds += $elapsed;
         }
 
-        // Jika sudah Cancel tapi sebelumnya sedang On Progress
         $isCancelled = $order->progress_id == 6;
         $cancelNote = null;
 
@@ -179,17 +195,27 @@ class OrderController extends Controller
             $cancelNote = "Order ini dibatalkan.";
         }
 
-        // Durasi Berjalan
         $durasiBerjalan = gmdate('H:i:s', $totalSeconds);
 
-        // Durasi Hold
         $durasiHold = null;
         if ($order->progress_id == 4 && $order->paused_at) {
             $elapsedHold = \Carbon\Carbon::parse($order->paused_at)->diffInSeconds(now());
             $durasiHold = gmdate('H:i:s', $elapsedHold);
         }
 
-        return view('order.detail', compact('order', 'durasiBerjalan', 'durasiHold', 'cancelNote'));
+        return view('order.detail', compact(
+            'order',
+            'durasiBerjalan',
+            'durasiHold',
+            'cancelNote',
+            'items',
+            'departments',
+            'categories',
+            'pics',
+            'users',
+            'progresses',
+            'priorities'
+        ));
     }
 
     public function update(Request $request, Order $order)
@@ -264,6 +290,19 @@ class OrderController extends Controller
             'start_date' => $startDate,
             'due_date' => $dueDate,
         ]);
+
+        // Cek apakah status baru adalah Finished atau Cancel
+        if (in_array($order->progress_id, [5, 6])) {
+            $reporter = $order->reporterUser;
+
+            if ($reporter && $reporter->email) {
+                if ($order->progress_id == 5) {
+                    Mail::to($reporter->email)->send(new NotifyReporterOrderFinished($order));
+                } elseif ($order->progress_id == 6) {
+                    Mail::to($reporter->email)->send(new NotifyReporterOrderCancelled($order));
+                }
+            }
+        }
 
         return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
     }
