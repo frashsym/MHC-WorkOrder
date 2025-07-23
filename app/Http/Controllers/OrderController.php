@@ -304,7 +304,14 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
+        $previousUrl = url()->previous(); // atau request()->headers->get('referer')
+
+        // Cek apakah berasal dari halaman detail
+        if (preg_match('/\/order\/\d+$/', $previousUrl)) {
+            return redirect()->to($previousUrl)->with('success', 'Order berhasil diperbarui!');
+        } else {
+            return redirect()->route('order.index')->with('success', 'Order berhasil diperbarui!');
+        }
     }
 
     public function destroy(Order $order)
