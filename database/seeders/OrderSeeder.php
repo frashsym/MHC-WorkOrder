@@ -14,14 +14,16 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         $faker = \Faker\Factory::create();
-        $datesUsed = []; // untuk melacak berapa banyak order tiap tanggal
+        $datesUsed = []; // untuk melacak jumlah order tiap tanggal
+        $maxDate = 25;   // batasi hanya sampai 25 Juli 2025
+        $totalOrders = 100;
 
-        for ($i = 1; $i <= 80; $i++) {
-            // Pilih tanggal antara 1 - 31 Juli 2025
+        for ($i = 1; $i <= $totalOrders; $i++) {
+            // Pilih tanggal antara 1 - 25 Juli 2025
             do {
-                $randomDay = rand(1, 31);
+                $randomDay = rand(1, $maxDate);
                 $dateKey = str_pad($randomDay, 2, '0', STR_PAD_LEFT);
-            } while (($datesUsed[$dateKey] ?? 0) >= 10); // pastikan max 10 per tanggal
+            } while (($datesUsed[$dateKey] ?? 0) >= 10); // maksimal 10 per tanggal
 
             // Simpan penggunaan tanggal
             $datesUsed[$dateKey] = ($datesUsed[$dateKey] ?? 0) + 1;

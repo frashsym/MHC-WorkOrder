@@ -15,7 +15,13 @@
         <tbody class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white">
             @forelse ($orders as $key => $order)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td class="px-4 py-2">{{ $orders->firstItem() + $key }}</td>
+                    <td class="px-4 py-2">
+                        @if ($orders instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                            {{ $orders->firstItem() + $key }}
+                        @else
+                            {{ $key + 1 }}
+                        @endif
+                    </td>
                     <td class="px-4 py-2">{{ $order->title }}</td>
                     <td class="px-4 py-2">{{ $order->letter_number }}</td>
                     <td class="px-4 py-2">{{ $order->create_date ?? '-' }}</td>

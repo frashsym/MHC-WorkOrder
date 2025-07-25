@@ -72,39 +72,48 @@ class OrderController extends Controller
     {
         $query = Order::with(['department', 'picUser', 'category']);
 
+        $isFiltered = false;
+
         // Filter berdasarkan departemen
         if ($request->filled('department_id')) {
             $query->where('department_id', $request->department_id);
+            $isFiltered = true;
         }
 
         // Filter berdasarkan objek
         if ($request->filled('item_id')) {
             $query->where('item_id', $request->item_id);
+            $isFiltered = true;
         }
 
         // Filter berdasarkan range waktu
         if ($request->date_range && $request->date_range !== 'custom') {
             $date = now();
+            $isFiltered = true;
+
             switch ($request->date_range) {
                 case 'today':
                     $query->whereDate('create_date', $date->toDateString());
                     break;
                 case 'week':
-                    $query->where('create_date', '>=', $date->subWeek());
+                    $query->where('create_date', '>=', $date->copy()->subWeek());
                     break;
                 case 'month':
-                    $query->where('create_date', '>=', $date->subMonth());
+                    $query->where('create_date', '>=', $date->copy()->subMonth());
                     break;
                 case 'year':
-                    $query->where('create_date', '>=', $date->subYear());
+                    $query->where('create_date', '>=', $date->copy()->subYear());
                     break;
             }
         } elseif ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('create_date', [$request->start_date, $request->end_date]);
+            $isFiltered = true;
         }
 
-        // Ambil data dengan urutan terbaru, bisa pakai paginate atau get
-        $orders = $query->latest()->paginate(10); // atau get() jika tidak perlu pagination
+        // Jika ada filter → ambil semua, jika tidak → pakai pagination
+        $orders = $isFiltered
+            ? $query->latest()->get()
+            : $query->latest()->paginate(10);
 
         return view('order._table', compact('orders'))->render();
     }
