@@ -9,31 +9,37 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form method="GET" action="{{ route('dashboard') }}"
-                    class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-wrap items-center gap-2">
-                    <label class="text-gray-700 dark:text-gray-200">Pilih Bulan:</label>
-                    <select name="month" class="rounded p-1 text-sm">
-                        @foreach(range(1, 12) as $m)
-                            <option value="{{ $m }}" {{ $m == $selectedMonth ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
-                            </option>
-                        @endforeach
-                    </select>
+                    class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-col sm:flex-row sm:items-end sm:gap-4">
 
-                    <label class="text-gray-700 dark:text-gray-200">Tahun:</label>
-                    <select name="year" class="rounded p-1 text-sm">
-                        @for ($y = now()->year - 2; $y <= now()->year + 1; $y++)
-                            <option value="{{ $y }}" {{ $y == $selectedYear ? 'selected' : '' }}>
-                                {{ $y }}
-                            </option>
-                        @endfor
-                    </select>
+                    <div class="flex flex-col sm:flex-1">
+                        <label class="text-gray-700 dark:text-gray-200 mb-1">Pilih Bulan:</label>
+                        <select name="month" class="rounded p-2 text-sm w-full">
+                            @foreach (range(1, 12) as $m)
+                                <option value="{{ $m }}" {{ $m == $selectedMonth ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                    <button type="submit"
-                        class="ml-2 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
-                        Tampilkan
-                    </button>
+                    <div class="flex flex-col sm:flex-1">
+                        <label class="text-gray-700 dark:text-gray-200 mb-1">Tahun:</label>
+                        <select name="year" class="rounded p-2 text-sm w-full">
+                            @for ($y = now()->year - 2; $y <= now()->year + 1; $y++)
+                                <option value="{{ $y }}" {{ $y == $selectedYear ? 'selected' : '' }}>
+                                    {{ $y }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="flex sm:flex-none mt-2 sm:mt-0">
+                        <button type="submit"
+                            class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                            Tampilkan
+                        </button>
+                    </div>
                 </form>
-
                 <canvas id="orderChart" height="120"></canvas>
                 <div id="orderTableContainer" class="mt-6"></div>
 
