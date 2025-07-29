@@ -177,11 +177,4 @@
             </div>
         </div>
     </div>
-    {{-- <form action="{{ route('global.search') }}" method="GET" class="flex items-center space-x-2">
-        <input type="text" name="q" placeholder="Cari data..." class="rounded-md px-2 py-1 border text-sm"
-            value="{{ request('q') }}">
-        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
-            Cari
-        </button>
-    </form> --}}
 </nav>
