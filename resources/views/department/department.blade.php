@@ -90,31 +90,28 @@
                     <!-- Tabel -->
                     <div class="w-full overflow-x-auto mt-6">
                         <table
-                            class="w-full min-w-[500px] md:min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
-                            <thead
-                                class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs md:text-sm lg:text-base">
+                            class="min-w-[500px] md:min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
+                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm">
                                 <tr>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">No</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Nama Departemen
-                                    </th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Aksi</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">No</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">Nama Departemen</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody
-                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-xs md:text-sm lg:text-base">
+                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-sm">
                                 @foreach ($departments as $index => $dept)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">
-                                            {{ $departments->firstItem() + $index }}
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $departments->firstItem() + $index }}
                                         </td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">{{ $dept->name }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2 whitespace-nowrap">
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $dept->name }}</td>
+                                        <td class="px-4 py-2 space-x-2 whitespace-nowrap">
                                             <button @click="openEdit({ id: {{ $dept->id }}, name: '{{ $dept->name }}' })"
-                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             <button @click="deleteModal = true; deleteId = {{ $dept->id }}"
-                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded">
                                                 <i class="fas fa-trash mr-1"></i> Hapus
                                             </button>
                                         </td>

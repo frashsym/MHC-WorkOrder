@@ -97,36 +97,33 @@
                     </div>
 
                     <!-- Tabel -->
-                    <div class="w-full overflow-x-auto mt-6">
+                    <div class="w-full overflow-x-auto">
                         <table
-                            class="w-full min-w-[600px] md:min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
-                            <thead
-                                class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs md:text-sm lg:text-base">
+                            class="min-w-[600px] md:min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
+                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm">
                                 <tr>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">No</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Nama</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Departemen</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Aksi</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">No</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">Nama</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">Departemen</th>
+                                    <th class="px-4 py-2 text-left whitespace-nowrap">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody
-                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-xs md:text-sm lg:text-base">
+                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-sm">
                                 @foreach ($categories as $index => $category)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">
-                                            {{ $categories->firstItem() + $index }}
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $categories->firstItem() + $index }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $category->name }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $category->department->name ?? '-' }}
                                         </td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">{{ $category->name }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">
-                                            {{ $category->department->name ?? '-' }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2 whitespace-nowrap">
+                                        <td class="px-4 py-2 space-x-2 whitespace-nowrap">
                                             <button
                                                 @click="openEdit({ id: {{ $category->id }}, name: '{{ $category->name }}', department_id: {{ $category->department_id }} })"
-                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             <button @click="deleteModal = true; deleteId = {{ $category->id }}"
-                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded">
                                                 <i class="fas fa-trash mr-1"></i> Hapus
                                             </button>
                                         </td>

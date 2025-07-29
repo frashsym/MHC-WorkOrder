@@ -89,22 +89,22 @@
                     <!-- Tabel -->
                     <div class="w-full overflow-x-auto mt-6">
                         <table
-                            class="w-full min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
-                            <thead
-                                class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs md:text-sm lg:text-base">
+                            class="min-w-[400px] w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
+                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <tr>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">No</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Nama</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Aksi</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">No</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Nama</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody
-                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-xs md:text-sm lg:text-base">
+                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white">
                                 @foreach ($priorities as $index => $priority)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $priorities->firstItem() + $index }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $priority->priority }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2">
+                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">
+                                            {{ $priorities->firstItem() + $index }}</td>
+                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">{{ $priority->priority }}
+                                        </td>
+                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2 whitespace-nowrap">
                                             <button
                                                 @click="openEdit({ id: {{ $priority->id }}, priority: '{{ $priority->priority }}' })"
                                                 class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
