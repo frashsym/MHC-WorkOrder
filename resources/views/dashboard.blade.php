@@ -12,7 +12,7 @@
                     class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-wrap items-center gap-2">
                     <label class="text-gray-700 dark:text-gray-200">Pilih Bulan:</label>
                     <select name="month" class="rounded p-1 text-sm">
-                        @foreach(range(1, 12) as $m)
+                        @foreach (range(1, 12) as $m)
                             <option value="{{ $m }}" {{ $m == $selectedMonth ? 'selected' : '' }}>
                                 {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
                             </option>
@@ -34,7 +34,9 @@
                     </button>
                 </form>
 
-                <canvas id="orderChart" height="120"></canvas>
+                <div class="scroll-wrapper">
+                    <canvas id="orderChart" height="120"></canvas>
+                </div>
                 <div id="orderTableContainer" class="mt-6"></div>
 
                 <script>
@@ -63,6 +65,7 @@
                         },
                         options: {
                             responsive: true,
+                            maintainAspectRatio: false,
                             plugins: {
                                 title: {
                                     display: true,
@@ -71,7 +74,8 @@
                                 tooltip: {
                                     callbacks: {
                                         title: (tooltipItems) => rawLabels[tooltipItems[0].dataIndex],
-                                        label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
+                                        label: (tooltipItem) =>
+                                            `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
                                 }
                             },
@@ -88,7 +92,8 @@
                                 const date = `${selectedYear}-${month}-${day}`;
 
                                 try {
-                                    const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" + encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
+                                    const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" +
+                                        encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
                                     const html = await res.text();
                                     document.getElementById('orderTableContainer').innerHTML = html;
                                 } catch (err) {
@@ -98,7 +103,17 @@
                         }
                     });
                 </script>
+                <style>
+                    .scroll-wrapper {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                    }
 
+                    .scroll-wrapper canvas {
+                        min-width: 800px;
+                        /* Paksa grafik agar bisa discroll pada layar kecil */
+                    }
+                </style>
             </div>
         </div>
     </div>
