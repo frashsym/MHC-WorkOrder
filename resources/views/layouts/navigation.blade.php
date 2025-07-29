@@ -135,9 +135,19 @@
         </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+    <!-- Fullscreen Mobile Menu -->
+    <div x-show="open" @click.outside="open = false" x-transition
+        class="fixed inset-0 z-50 bg-white dark:bg-gray-900 sm:hidden overflow-y-auto">
+        <div class="p-6 space-y-4">
+            <!-- Close Button -->
+            <div class="flex justify-end">
+                <button @click="open = false"
+                    class="text-gray-700 dark:text-gray-300 hover:text-red-600 text-xl font-bold">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
@@ -146,28 +156,42 @@
             </x-responsive-nav-link>
 
             @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
-                <x-responsive-nav-link :href="route('department.index')">{{ __('Departmen') }}</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('category.index')">{{ __('Kategori') }}</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('item.index')">{{ __('Objek') }}</x-responsive-nav-link>
+                <div class="border-t border-gray-300 dark:border-gray-700 pt-4">
+                    <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">Master Data</div>
+                    <x-responsive-nav-link :href="route('department.index')"
+                        :active="request()->routeIs('department.index')">{{ __('Departmen') }}</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('category.index')"
+                        :active="request()->routeIs('category.index')">{{ __('Kategori') }}</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('item.index')"
+                        :active="request()->routeIs('item.index')">{{ __('Objek') }}</x-responsive-nav-link>
+                </div>
 
                 @if (Auth::user()->role_id === 1)
-                    <x-responsive-nav-link :href="route('role.index')">{{ __('Role') }}</x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('user.index')">{{ __('User') }}</x-responsive-nav-link>
+                    <div class="border-t border-gray-300 dark:border-gray-700 pt-4">
+                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">Pengguna & Akses
+                        </div>
+                        <x-responsive-nav-link :href="route('role.index')"
+                            :active="request()->routeIs('role.index')">{{ __('Role') }}</x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('user.index')"
+                            :active="request()->routeIs('user.index')">{{ __('User') }}</x-responsive-nav-link>
+                    </div>
                 @endif
 
-                <x-responsive-nav-link :href="route('priority.index')">{{ __('Prioritas') }}</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('progress.index')">{{ __('Progress') }}</x-responsive-nav-link>
+                <div class="border-t border-gray-300 dark:border-gray-700 pt-4">
+                    <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">Status</div>
+                    <x-responsive-nav-link :href="route('priority.index')"
+                        :active="request()->routeIs('priority.index')">{{ __('Prioritas') }}</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('progress.index')"
+                        :active="request()->routeIs('progress.index')">{{ __('Progress') }}</x-responsive-nav-link>
+                </div>
             @endif
-        </div>
 
-        <!-- Mobile User Info -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
+            <!-- Profile -->
+            <div class="border-t border-gray-300 dark:border-gray-700 pt-4">
+                <div class="text-sm text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ Auth::user()->email }}</div>
+
+                <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                     {{ __('Profil') }}
                 </x-responsive-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
