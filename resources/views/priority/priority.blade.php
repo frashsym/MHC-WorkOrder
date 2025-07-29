@@ -19,19 +19,24 @@
 
                     <!-- Modal Tambah/Edit -->
                     <div x-show="modalOpen" x-cloak>
-                        <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+                        <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
+                        </div>
                         <div class="fixed inset-0 z-30 overflow-y-auto">
                             <div class="flex min-h-full items-center justify-center p-4">
                                 <div x-show="modalOpen" x-transition @click.outside="modalOpen = false"
                                     class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-                                    <form :action="isEditMode ? '/priority/' + formData.id : '{{ route('priority.store') }}'" method="POST">
+                                    <form
+                                        :action="isEditMode ? '/priority/' + formData.id : '{{ route('priority.store') }}'"
+                                        method="POST">
                                         @csrf
                                         <template x-if="isEditMode">
                                             <input type="hidden" name="_method" value="PUT">
                                         </template>
-                                        <h2 class="text-lg font-semibold mb-4" x-text="isEditMode ? 'Edit Prioritas' : 'Tambah Prioritas'"></h2>
+                                        <h2 class="text-lg font-semibold mb-4"
+                                            x-text="isEditMode ? 'Edit Prioritas' : 'Tambah Prioritas'"></h2>
                                         <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700">Nama Prioritas</label>
+                                            <label class="block text-sm font-medium text-gray-700">Nama
+                                                Prioritas</label>
                                             <input type="text" name="priority" x-model="formData.priority" required
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                         </div>
@@ -53,7 +58,8 @@
 
                     <!-- Modal Delete -->
                     <div x-show="deleteModal" x-cloak>
-                        <div x-show="deleteModal" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+                        <div x-show="deleteModal" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
+                        </div>
                         <div class="fixed inset-0 z-40 overflow-y-auto">
                             <div class="flex items-center justify-center min-h-screen p-4">
                                 <div x-show="deleteModal" x-transition
@@ -81,28 +87,32 @@
                     </div>
 
                     <!-- Tabel -->
-                    <div class="overflow-x-auto mt-6">
-                        <table class="min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700">
-                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                    <div class="w-full overflow-x-auto mt-6">
+                        <table
+                            class="w-full min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
+                            <thead
+                                class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs md:text-sm lg:text-base">
                                 <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Nama</th>
-                                    <th class="px-4 py-2 text-left">Aksi</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">No</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Nama</th>
+                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white">
+                            <tbody
+                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-xs md:text-sm lg:text-base">
                                 @foreach ($priorities as $index => $priority)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-4 py-2">{{ $priorities->firstItem() + $index }}</td>
-                                        <td class="px-4 py-2">{{ $priority->priority }}</td>
-                                        <td class="px-4 py-2 space-x-2">
-                                            <button @click="openEdit({ id: {{ $priority->id }}, priority: '{{ $priority->priority }}' })"
-                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded">
-                                                <i class="fas fa-edit"></i> Edit
+                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $priorities->firstItem() + $index }}</td>
+                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $priority->priority }}</td>
+                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2">
+                                            <button
+                                                @click="openEdit({ id: {{ $priority->id }}, priority: '{{ $priority->priority }}' })"
+                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             <button @click="deleteModal = true; deleteId = {{ $priority->id }}"
-                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded">
-                                                <i class="fas fa-trash"></i> Hapus
+                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                <i class="fas fa-trash mr-1"></i> Hapus
                                             </button>
                                         </td>
                                     </tr>
