@@ -9,11 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form method="GET" action="{{ route('dashboard') }}"
-                    class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-col sm:flex-row sm:items-end sm:gap-4">
+                    class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:gap-4">
 
-                    <div class="flex flex-col sm:flex-1">
-                        <label class="text-gray-700 dark:text-gray-200 mb-1">Pilih Bulan:</label>
-                        <select name="month" class="rounded p-2 text-sm w-full">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <label class="text-gray-700 dark:text-gray-200 mb-1 lg:mb-0 lg:mr-2 min-w-max">Pilih
+                            Bulan:</label>
+                        <select name="month" class="rounded p-2 text-sm w-full lg:w-auto min-w-[120px]">
                             @foreach (range(1, 12) as $m)
                                 <option value="{{ $m }}" {{ $m == $selectedMonth ? 'selected' : '' }}>
                                     {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
@@ -22,9 +23,10 @@
                         </select>
                     </div>
 
-                    <div class="flex flex-col sm:flex-1">
-                        <label class="text-gray-700 dark:text-gray-200 mb-1">Tahun:</label>
-                        <select name="year" class="rounded p-2 text-sm w-full">
+                    <div class="flex flex-col lg:flex-row lg:items-center">
+                        <label
+                            class="text-gray-700 dark:text-gray-200 mb-1 lg:mb-0 lg:ml-2 lg:mr-2 min-w-max">Tahun:</label>
+                        <select name="year" class="rounded p-2 text-sm w-full lg:w-auto min-w-[100px]">
                             @for ($y = now()->year - 2; $y <= now()->year + 1; $y++)
                                 <option value="{{ $y }}" {{ $y == $selectedYear ? 'selected' : '' }}>
                                     {{ $y }}
@@ -33,9 +35,9 @@
                         </select>
                     </div>
 
-                    <div class="flex sm:flex-none mt-2 sm:mt-0">
+                    <div class="mt-2 lg:mt-0 lg:ml-auto">
                         <button type="submit"
-                            class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                            class="px-4 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 w-full lg:w-auto">
                             Tampilkan
                         </button>
                     </div>
