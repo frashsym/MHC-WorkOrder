@@ -32,7 +32,7 @@
                             @endfor
                         </select>
                     </div>
-
+                    <br>
                     <div class="flex sm:flex-none mt-2 sm:mt-0">
                         <button type="submit"
                             class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
@@ -77,7 +77,8 @@
                                 tooltip: {
                                     callbacks: {
                                         title: (tooltipItems) => rawLabels[tooltipItems[0].dataIndex],
-                                        label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
+                                        label: (tooltipItem) =>
+                                            `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
                                 }
                             },
@@ -94,7 +95,8 @@
                                 const date = `${selectedYear}-${month}-${day}`;
 
                                 try {
-                                    const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" + encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
+                                    const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" +
+                                        encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
                                     const html = await res.text();
                                     document.getElementById('orderTableContainer').innerHTML = html;
                                 } catch (err) {
