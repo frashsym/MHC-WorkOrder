@@ -12,8 +12,9 @@
                     </a>
                 </div>
 
-                <!-- Desktop nav links -->
-                <div class="hidden sm:flex items-center gap-6 ms-6">
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
+
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
@@ -25,7 +26,7 @@
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button
-                                    class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">
+                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
                                     {{ __('Master Data') }}
                                     <svg class="ms-1 h-4 w-4 fill-current" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
@@ -45,7 +46,7 @@
                             <x-dropdown align="left" width="48">
                                 <x-slot name="trigger">
                                     <button
-                                        class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
                                         {{ __('Pengguna & Akses') }}
                                         <svg class="ms-1 h-4 w-4 fill-current" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
@@ -64,7 +65,7 @@
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button
-                                    class="inline-flex items-center text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">
+                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none transition">
                                     {{ __('Status') }}
                                     <svg class="ms-1 h-4 w-4 fill-current" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
@@ -87,7 +88,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
                             <svg class="ms-1 h-4 w-4 fill-current" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
