@@ -72,10 +72,7 @@
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: 'Grafik Order per Hari Bulan Ini per Departemen',
-                                    font: {
-                                        size: 16
-                                    }
+                                    text: 'Grafik Order per Hari Bulan Ini per Departemen'
                                 },
                                 tooltip: {
                                     callbacks: {
@@ -83,37 +80,7 @@
                                         label: (tooltipItem) =>
                                             `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
-                                },
-                                legend: {
-                                    labels: {
-                                        font: {
-                                            size: 12
-                                        }
-                                    }
                                 }
-                            },
-                            scales: {
-                                x: {
-                                    ticks: {
-                                        autoSkip: true,
-                                        maxTicksLimit: window.innerWidth < 640 ? 5 : 31, // lebih sedikit di mobile
-                                        font: {
-                                            size: window.innerWidth < 640 ? 10 : 12
-                                        }
-                                    }
-                                },
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        font: {
-                                            size: window.innerWidth < 640 ? 10 : 12
-                                        }
-                                    }
-                                }
-                            },
-                            interaction: {
-                                mode: 'nearest',
-                                intersect: false
                             },
                             onClick: async (event, elements) => {
                                 if (!elements.length) return;
