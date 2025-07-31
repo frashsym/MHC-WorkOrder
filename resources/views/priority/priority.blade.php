@@ -89,34 +89,45 @@
                     <!-- Tabel -->
                     <div class="w-full overflow-x-auto mt-6">
                         <table
-                            class="min-w-[400px] w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
-                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                            class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
+                            <thead class="hidden md:table-header-group bg-gray-100 dark:bg-gray-700">
                                 <tr>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">No</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Nama</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left whitespace-nowrap">Aksi</th>
+                                    <th class="px-4 py-2 text-left">No</th>
+                                    <th class="px-4 py-2 text-left">Nama</th>
+                                    <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white">
-                                @foreach ($priorities as $index => $priority)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">
-                                            {{ $priorities->firstItem() + $index }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 whitespace-nowrap">{{ $priority->priority }}
+                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                                @forelse ($priorities as $index => $priority)
+                                    <tr class="flex flex-col md:table-row hover:bg-gray-50 dark:hover:bg-gray-800">
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">No:</span>
+                                            {{ $priorities->firstItem() + $index }}
                                         </td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2 whitespace-nowrap">
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Nama:</span>
+                                            {{ $priority->priority }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell space-x-2">
                                             <button
                                                 @click="openEdit({ id: {{ $priority->id }}, priority: '{{ $priority->priority }}' })"
-                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             <button @click="deleteModal = true; deleteId = {{ $priority->id }}"
-                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
                                                 <i class="fas fa-trash mr-1"></i> Hapus
                                             </button>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3"
+                                            class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+                                            Tidak ada data prioritas tersedia.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -147,11 +158,16 @@
                 },
                 openEdit(priority) {
                     this.isEditMode = true;
-                    this.formData = { ...priority };
+                    this.formData = {
+                        ...priority
+                    };
                     this.modalOpen = true;
                 },
                 resetForm() {
-                    this.formData = { id: null, priority: '' };
+                    this.formData = {
+                        id: null,
+                        priority: ''
+                    };
                 },
             }
         }

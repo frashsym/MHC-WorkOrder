@@ -4,7 +4,7 @@
             <tr>
                 <th class="px-4 py-2 text-left">No</th>
                 <th class="px-4 py-2 text-left">Judul</th>
-                <th class="px-4 py-2 text-left">Nomor Surat</th>
+                <th class="px-4 py-2 text-left">Nomor Order</th>
                 <th class="px-4 py-2 text-left">Tanggal</th>
                 <th class="px-4 py-2 text-left">Departemen</th>
                 <th class="px-4 py-2 text-left">Solver</th>
@@ -23,7 +23,7 @@
                         @endif
                     </td>
                     <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Judul:</span> {{ $order->title }}</td>
-                    <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Nomor Surat:</span> {{ $order->letter_number }}</td>
+                    <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Nomor Order:</span> {{ $order->letter_number }}</td>
                     <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Tanggal:</span> {{ $order->create_date ?? '-' }}</td>
                     <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Departemen:</span> {{ $order->department->name ?? '-' }}</td>
                     <td class="px-4 py-2 md:whitespace-nowrap md:table-cell"><span class="md:hidden font-semibold">Solver:</span> {{ $order->picUser->name ?? '-' }}</td>

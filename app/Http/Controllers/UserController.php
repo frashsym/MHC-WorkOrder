@@ -26,7 +26,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'role_id' => 'required|exists:roles,id',
             'email' => 'required|email|unique:users',
-            'department_id' => 'required|exists:department,id',
+            'department_id' => 'required|exists:departments,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
 

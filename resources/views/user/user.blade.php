@@ -69,7 +69,8 @@
                                                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                                                 <option value="">-- Pilih --</option>
                                                 @foreach ($departments as $department)
-                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                    <option value="{{ $department->id }}">{{ $department->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -138,42 +139,65 @@
                     <!-- Tabel -->
                     <div class="w-full overflow-x-auto mt-6">
                         <table
-                            class="w-full min-w-[700px] md:min-w-full border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-xs md:text-sm lg:text-base">
-                            <thead
-                                class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs md:text-sm lg:text-base">
+                            class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
+                            <thead class="hidden md:table-header-group bg-gray-100 dark:bg-gray-700">
                                 <tr>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">No</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Nama</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Username</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Role</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Email</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Departemen</th>
-                                    <th class="px-2 md:px-4 py-1 md:py-2 text-left">Aksi</th>
+                                    <th class="px-4 py-2 text-left">No</th>
+                                    <th class="px-4 py-2 text-left">Nama</th>
+                                    <th class="px-4 py-2 text-left">Username</th>
+                                    <th class="px-4 py-2 text-left">Role</th>
+                                    <th class="px-4 py-2 text-left">Email</th>
+                                    <th class="px-4 py-2 text-left">Departemen</th>
+                                    <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody
-                                class="divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-white text-xs md:text-sm lg:text-base">
-                                @foreach ($users as $index => $user)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $users->firstItem() + $index }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $user->name }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $user->username }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $user->role->role ?? '-' }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $user->email }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2">{{ $user->department->name ?? '-' }}</td>
-                                        <td class="px-2 md:px-4 py-1 md:py-2 space-x-1 md:space-x-2">
+                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                                @forelse ($users as $index => $user)
+                                    <tr class="flex flex-col md:table-row hover:bg-gray-50 dark:hover:bg-gray-800">
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">No:</span>
+                                            {{ $users->firstItem() + $index }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Nama:</span>
+                                            {{ $user->name }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Username:</span>
+                                            {{ $user->username }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Role:</span>
+                                            {{ $user->role->role ?? '-' }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Email:</span>
+                                            {{ $user->email }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
+                                            <span class="md:hidden font-semibold">Departemen:</span>
+                                            {{ $user->department->name ?? '-' }}
+                                        </td>
+                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell space-x-2">
                                             <button
                                                 @click="openEdit({ id: {{ $user->id }}, name: '{{ $user->name }}', username: '{{ $user->username }}', email: '{{ $user->email }}', role_id: {{ $user->role_id }}, department_id: {{ $user->department_id }} })"
-                                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             <button @click="deleteModal = true; deleteId = {{ $user->id }}"
-                                                class="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs md:text-sm">
+                                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
                                                 <i class="fas fa-trash mr-1"></i> Hapus
                                             </button>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="7"
+                                            class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+                                            Tidak ada data user tersedia.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
