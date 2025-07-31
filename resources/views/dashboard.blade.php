@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w+-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form method="GET" action="{{ route('dashboard') }}"
                     class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-col sm:flex-row sm:items-end sm:gap-4">
@@ -72,7 +72,10 @@
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: 'Grafik Order per Hari Bulan Ini per Departemen'
+                                    text: 'Grafik Order per Hari Bulan Ini per Departemen',
+                                    font: {
+                                        size: 16
+                                    }
                                 },
                                 tooltip: {
                                     callbacks: {
@@ -80,7 +83,37 @@
                                         label: (tooltipItem) =>
                                             `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
+                                },
+                                legend: {
+                                    labels: {
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
                                 }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        autoSkip: true,
+                                        maxTicksLimit: window.innerWidth < 640 ? 5 : 31, // lebih sedikit di mobile
+                                        font: {
+                                            size: window.innerWidth < 640 ? 10 : 12
+                                        }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        font: {
+                                            size: window.innerWidth < 640 ? 10 : 12
+                                        }
+                                    }
+                                }
+                            },
+                            interaction: {
+                                mode: 'nearest',
+                                intersect: false
                             },
                             onClick: async (event, elements) => {
                                 if (!elements.length) return;
