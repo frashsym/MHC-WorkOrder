@@ -1,6 +1,5 @@
 <!-- NAVIGATION -->
-<nav x-data="{ open: false }"
-    class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
+<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <!-- Left section -->
@@ -83,6 +82,10 @@
                 </div>
             </div>
 
+            <div id="animated-box" class="relative w-60 h-20 flex items-center justify-center">
+                <div class="message-content text-blue-500 text-center font-semibold z-20"></div>
+            </div>
+
             <!-- User Profile -->
             <div class="hidden sm:flex items-center ms-auto ps-6">
                 <x-dropdown align="right" width="48">
@@ -161,7 +164,8 @@
                 <!-- Pengguna & Akses -->
                 @if (Auth::user()->role_id === 1)
                     <div class="pt-4 border-t border-gray-300 dark:border-gray-700">
-                        <div class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">Pengguna & Akses
+                        <div class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">Pengguna &
+                            Akses
                         </div>
                         <x-responsive-nav-link :href="route('role.index')"
                             :active="request()->routeIs('role.index')">{{ __('Role') }}</x-responsive-nav-link>
@@ -200,3 +204,65 @@
         </div>
     </div>
 </nav>
+
+<script>
+    console.log("Script loaded");
+
+    const box = document.getElementById('animated-box');
+    const content = box.querySelector('.message-content');
+
+    const messages = [{
+            lines: ['Sistem Sedang', 'Melakukan Update']
+        },
+        {
+            lines: ['Maintenance', 'Berkala']
+        },
+        {
+            lines: ['Segera Kembali']
+        },
+    ];
+
+    let index = 0;
+
+    function animateBox() {
+        // Hapus animasi sebelumnya
+        document.querySelectorAll('.line-border, .box-anim').forEach(el => el.remove());
+
+        // Buat elemen animasi garis
+        const boxAnim = document.createElement('div');
+        boxAnim.classList.add('absolute', 'inset-0', 'box-anim', 'pointer-events-none');
+        box.appendChild(boxAnim);
+
+        const left = document.createElement('div');
+        left.classList.add('line-border', 'line-left');
+        const right = document.createElement('div');
+        right.classList.add('line-border', 'line-right');
+        const top = document.createElement('div');
+        top.classList.add('line-border', 'line-top');
+        const bottom = document.createElement('div');
+        bottom.classList.add('line-border', 'line-bottom');
+
+        box.appendChild(top);
+        box.appendChild(bottom);
+        box.appendChild(left);
+        box.appendChild(right);
+
+        // Ganti teks setelah border selesai (2.4 detik)
+        content.style.opacity = 0;
+        content.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            const {
+                lines
+            } = messages[index];
+            content.innerHTML = lines.map(line => `<div>${line}</div>`).join('');
+            content.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            content.style.opacity = 1;
+            content.style.transform = 'translateY(0)';
+        }, 2400);
+
+        index = (index + 1) % messages.length;
+    }
+
+    animateBox();
+    setInterval(animateBox, 6000);
+</script>

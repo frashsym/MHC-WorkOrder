@@ -10,7 +10,6 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <form method="GET" action="{{ route('dashboard') }}"
                     class="p-4 bg-gray-100 dark:bg-gray-700 rounded-md mb-4 flex flex-col sm:flex-row sm:items-end sm:gap-4">
-
                     <div class="flex flex-col sm:flex-1">
                         <label class="text-gray-700 dark:text-gray-200 mb-1">Pilih Bulan:</label>
                         <select name="month" class="rounded p-2 text-sm w-full">
@@ -40,7 +39,11 @@
                         </button>
                     </div>
                 </form>
-                <canvas id="orderChart" height="120"></canvas>
+                <div class="overflow-x-auto">
+                    <div class="min-w-[500px] sm:min-w-full">
+                        <canvas id="orderChart" class="w-full" height="220"></canvas>
+                    </div>
+                </div>
                 <div id="orderTableContainer" class="mt-6"></div>
 
                 <script>

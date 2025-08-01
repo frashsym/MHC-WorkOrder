@@ -5,3 +5,85 @@
 [x-cloak] {
     display: none !important;
 }
+
+#animated-box {
+    position: relative;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+#animated-box .message-content {
+    z-index: 20;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.line-border {
+    position: absolute;
+    background-color: #3b82f6;
+    z-index: 10;
+}
+
+/* Garis atas */
+.line-top {
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    animation: drawTop 0.5s forwards;
+}
+
+/* Garis bawah */
+.line-bottom {
+    bottom: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    animation: drawBottom 0.5s 0.5s forwards;
+}
+
+/* Garis kiri */
+.line-left {
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 0;
+    animation: drawLeft 0.5s 1s forwards;
+}
+
+/* Garis kanan */
+.line-right {
+    bottom: 0;
+    right: 0;
+    width: 2px;
+    height: 0;
+    animation: drawRight 0.5s 1.5s forwards;
+}
+
+/* Animasi border */
+@keyframes drawTop {
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes drawBottom {
+    to {
+        width: 100%;
+        right: auto;
+        left: 0;
+    }
+}
+
+@keyframes drawLeft {
+    to {
+        height: 100%;
+    }
+}
+
+@keyframes drawRight {
+    to {
+        height: 100%;
+        bottom: auto;
+        top: 0;
+    }
+}
