@@ -1,5 +1,6 @@
 <!-- NAVIGATION -->
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
+<nav x-data="{ open: false }"
+    class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <!-- Left section -->
@@ -82,8 +83,12 @@
                 </div>
             </div>
 
-            <div id="animated-box" class="relative w-60 h-20 flex items-center justify-center">
-                <div class="message-content text-blue-500 text-center font-semibold z-20"></div>
+            <!-- Animated Text Area -->
+            <div class="w-full max-w-md">
+                <div class="relative h-10 overflow-hidden flex justify-center items-center">
+                    <div id="text-a" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">A</div>
+                    <div id="text-b" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">B</div>
+                </div>
             </div>
 
             <!-- User Profile -->
@@ -205,64 +210,52 @@
     </div>
 </nav>
 
+
 <script>
-    console.log("Script loaded");
-
-    const box = document.getElementById('animated-box');
-    const content = box.querySelector('.message-content');
-
-    const messages = [{
-            lines: ['Sistem Sedang', 'Melakukan Update']
-        },
-        {
-            lines: ['Maintenance', 'Berkala']
-        },
-        {
-            lines: ['Segera Kembali']
-        },
+    const messages = [
+        'Metland Spirit',
+        'Integritas',
+        'Semangat',
+        'Profesional',
+        'Kerja Keras',
+        'Enterpreneurship',
+        'Pantang Menyerah',
+        'Metland Coloring Life'
     ];
 
     let index = 0;
+    let isAActive = true;
 
-    function animateBox() {
-        // Hapus animasi sebelumnya
-        document.querySelectorAll('.line-border, .box-anim').forEach(el => el.remove());
+    const textA = document.getElementById('text-a');
+    const textB = document.getElementById('text-b');
 
-        // Buat elemen animasi garis
-        const boxAnim = document.createElement('div');
-        boxAnim.classList.add('absolute', 'inset-0', 'box-anim', 'pointer-events-none');
-        box.appendChild(boxAnim);
+    function animateText() {
+        const current = isAActive ? textA : textB;
+        const next = isAActive ? textB : textA;
 
-        const left = document.createElement('div');
-        left.classList.add('line-border', 'line-left');
-        const right = document.createElement('div');
-        right.classList.add('line-border', 'line-right');
-        const top = document.createElement('div');
-        top.classList.add('line-border', 'line-top');
-        const bottom = document.createElement('div');
-        bottom.classList.add('line-border', 'line-bottom');
+        // Reset posisi next di luar kanan
+        next.textContent = messages[index];
+        next.classList.remove('translate-x-0', 'opacity-100');
+        next.classList.add('translate-x-full', 'opacity-0');
 
-        box.appendChild(top);
-        box.appendChild(bottom);
-        box.appendChild(left);
-        box.appendChild(right);
+        void next.offsetWidth; // trigger reflow agar animasi aktif
 
-        // Ganti teks setelah border selesai (2.4 detik)
-        content.style.opacity = 0;
-        content.style.transform = 'translateY(10px)';
-        setTimeout(() => {
-            const {
-                lines
-            } = messages[index];
-            content.innerHTML = lines.map(line => `<div>${line}</div>`).join('');
-            content.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            content.style.opacity = 1;
-            content.style.transform = 'translateY(0)';
-        }, 2400);
+        // Munculkan next ke tengah
+        next.classList.remove('translate-x-full', 'opacity-0');
+        next.classList.add('translate-x-0', 'opacity-100');
 
+        // Geser keluar current ke kanan
+        current.classList.remove('translate-x-0', 'opacity-100');
+        current.classList.add('translate-x-full', 'opacity-0');
+
+        isAActive = !isAActive;
         index = (index + 1) % messages.length;
     }
 
-    animateBox();
-    setInterval(animateBox, 6000);
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            animateText();
+            setInterval(animateText, 4000);
+        }, 1000);
+    });
 </script>

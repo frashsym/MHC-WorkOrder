@@ -10,7 +10,15 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
     ],
-    safelist: ['line-border', 'line-left', 'line-right', 'box-anim'],
+    safelist: [
+        'line-border',
+        'line-left',
+        'line-right',
+        'box-anim',
+        'translate-x-0',
+        'translate-x-full',
+        'opacity-0',
+        'opacity-100'],
 
     theme: {
         extend: {
