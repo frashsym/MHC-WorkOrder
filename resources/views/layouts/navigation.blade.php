@@ -80,17 +80,15 @@
                             </x-slot>
                         </x-dropdown>
                     @endif
+                    <!-- Animated Text Area (centered between Status and Profile dropdowns) -->
+                    <div class="hidden lg:block animated-banner">
+                        <div id="text-a" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">A
+                        </div>
+                        <div id="text-b" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">B
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Animated Text Area -->
-            <div class="w-full max-w-md">
-                <div class="relative h-10 overflow-hidden flex justify-center items-center">
-                    <div id="text-a" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">A</div>
-                    <div id="text-b" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">B</div>
-                </div>
-            </div>
-
             <!-- User Profile -->
             <div class="hidden sm:flex items-center ms-auto ps-6">
                 <x-dropdown align="right" width="48">
