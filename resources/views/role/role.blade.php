@@ -90,50 +90,73 @@
                         </div>
                     </div>
 
-                    <!-- Tabel -->
-                    <div class="w-full overflow-x-auto mt-6">
-                        <table
-                            class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
-                            <thead class="hidden md:table-header-group bg-gray-100 dark:bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Nama Role</th>
-                                    <th class="px-4 py-2 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
-                                @forelse ($roles as $index => $role)
-                                    <tr class="flex flex-col md:table-row hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
-                                            <span class="md:hidden font-semibold">No:</span>
-                                            {{ $roles->firstItem() + $index }}
-                                        </td>
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
-                                            <span class="md:hidden font-semibold">Nama Role:</span>
-                                            {{ $role->role }}
-                                        </td>
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell space-x-2">
-                                            <button
-                                                @click="openEdit({ id: {{ $role->id }}, role: '{{ $role->role }}' })"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
-                                                <i class="fas fa-edit mr-1"></i> Edit
-                                            </button>
-                                            <button @click="deleteModal = true; deleteId = {{ $role->id }}"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
-                                                <i class="fas fa-trash mr-1"></i> Hapus
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @empty
+                    <!-- Wrapper Responsif -->
+                    <div class="w-full mt-6">
+                        <!-- Tabel Desktop (≥ lg) -->
+                        <div class="hidden lg:block overflow-x-auto">
+                            <table
+                                class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
+                                <thead class="bg-gray-100 dark:bg-gray-700">
                                     <tr>
-                                        <td colspan="3"
-                                            class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
-                                            Tidak ada data role tersedia.
-                                        </td>
+                                        <th class="px-4 py-2 text-left">No</th>
+                                        <th class="px-4 py-2 text-left">Nama Role</th>
+                                        <th class="px-4 py-2 text-left">Aksi</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                                    @forelse ($roles as $index => $role)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td class="px-4 py-2">{{ $roles->firstItem() + $index }}</td>
+                                            <td class="px-4 py-2">{{ $role->role }}</td>
+                                            <td class="px-4 py-2 space-x-2">
+                                                <button
+                                                    @click="openEdit({ id: {{ $role->id }}, role: '{{ $role->role }}' })"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
+                                                    <i class="fas fa-edit mr-1"></i> Edit
+                                                </button>
+                                                <button @click="deleteModal = true; deleteId = {{ $role->id }}"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
+                                                    <i class="fas fa-trash mr-1"></i> Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3"
+                                                class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+                                                Tidak ada data role tersedia.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Card Mobile (< lg) -->
+                        <div class="block lg:hidden mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @forelse ($roles as $index => $role)
+                                <div
+                                    class="border border-gray-300 dark:border-gray-700 rounded-lg p-4 text-gray-800 dark:text-gray-200">
+                                    <p><strong>No:</strong> {{ $roles->firstItem() + $index }}</p>
+                                    <p><strong>Nama Role:</strong> {{ $role->role }}</p>
+                                    <div class="flex flex-wrap gap-2 mt-3">
+                                        <button
+                                            @click="openEdit({ id: {{ $role->id }}, role: '{{ $role->role }}' })"
+                                            class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </button>
+                                        <button @click="deleteModal = true; deleteId = {{ $role->id }}"
+                                            class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
+                                            <i class="fas fa-trash mr-1"></i> Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-span-full text-center text-gray-500 dark:text-gray-400">
+                                    Tidak ada data role tersedia.
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
 
                     <div class="mt-4">

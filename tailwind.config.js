@@ -18,7 +18,17 @@ export default {
         'translate-x-0',
         'translate-x-full',
         'opacity-0',
-        'opacity-100'],
+        'opacity-100',
+        
+        'block',
+        'hidden',
+        'lg:block',
+        'lg:hidden',
+        'grid',
+        'grid-cols-1',
+        'sm:grid-cols-2',
+        'gap-4',
+    ],
 
     theme: {
         extend: {

@@ -95,55 +95,76 @@
                         </div>
                     </div>
 
-                    <!-- Tabel -->
-                    <div class="w-full overflow-x-auto mt-6">
-                        <table
-                            class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
-                            <thead class="hidden md:table-header-group bg-gray-100 dark:bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Nama</th>
-                                    <th class="px-4 py-2 text-left">Departemen</th>
-                                    <th class="px-4 py-2 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
-                                @forelse ($items as $index => $item)
-                                    <tr class="flex flex-col md:table-row hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
-                                            <span class="md:hidden font-semibold">No:</span>
-                                            {{ $items->firstItem() + $index }}
-                                        </td>
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
-                                            <span class="md:hidden font-semibold">Nama:</span>
-                                            {{ $item->name }}
-                                        </td>
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell">
-                                            <span class="md:hidden font-semibold">Departemen:</span>
-                                            {{ $item->department->name ?? '-' }}
-                                        </td>
-                                        <td class="px-4 py-2 md:whitespace-nowrap md:table-cell space-x-2">
-                                            <button
-                                                @click="openEdit({ id: {{ $item->id }}, name: '{{ $item->name }}', department_id: {{ $item->department_id }} })"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
-                                                <i class="fas fa-edit mr-1"></i> Edit
-                                            </button>
-                                            <button @click="deleteModal = true; deleteId = {{ $item->id }}"
-                                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
-                                                <i class="fas fa-trash mr-1"></i> Hapus
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @empty
+                    <!-- Wrapper responsif -->
+                    <div class="w-full mt-6">
+                        <!-- Tabel (desktop ≥ 1024px) -->
+                        <div class="hidden lg:block overflow-x-auto">
+                            <table
+                                class="w-full table-auto border border-gray-300 dark:border-gray-700 divide-y divide-gray-300 dark:divide-gray-700 text-gray-800 dark:text-gray-200 text-sm">
+                                <thead class="bg-gray-100 dark:bg-gray-700">
                                     <tr>
-                                        <td colspan="4"
-                                            class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
-                                            Tidak ada data tersedia.
-                                        </td>
+                                        <th class="px-4 py-2 text-left">No</th>
+                                        <th class="px-4 py-2 text-left">Nama</th>
+                                        <th class="px-4 py-2 text-left">Departemen</th>
+                                        <th class="px-4 py-2 text-left">Aksi</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-gray-300 dark:divide-gray-700">
+                                    @forelse ($items as $index => $item)
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td class="px-4 py-2">{{ $items->firstItem() + $index }}</td>
+                                            <td class="px-4 py-2">{{ $item->name }}</td>
+                                            <td class="px-4 py-2">{{ $item->department->name ?? '-' }}</td>
+                                            <td class="px-4 py-2 space-x-2">
+                                                <button
+                                                    @click="openEdit({ id: {{ $item->id }}, name: '{{ $item->name }}', department_id: {{ $item->department_id }} })"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
+                                                    <i class="fas fa-edit mr-1"></i> Edit
+                                                </button>
+                                                <button @click="deleteModal = true; deleteId = {{ $item->id }}"
+                                                    class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
+                                                    <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4"
+                                                class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">
+                                                Tidak ada data tersedia.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Card Grid (khusus mobile & tablet < 1024px) -->
+                        <div class="block lg:hidden mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @forelse ($items as $index => $item)
+                                <div
+                                    class="border border-gray-300 dark:border-gray-700 rounded-lg p-4 text-gray-800 dark:text-gray-200">
+                                    <p><strong>No:</strong> {{ $items->firstItem() + $index }}</p>
+                                    <p><strong>Nama:</strong> {{ $item->name }}</p>
+                                    <p><strong>Departemen:</strong> {{ $item->department->name ?? '-' }}</p>
+                                    <div class="flex flex-wrap gap-2 mt-3">
+                                        <button
+                                            @click="openEdit({ id: {{ $item->id }}, name: '{{ $item->name }}', department_id: {{ $item->department_id }} })"
+                                            class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </button>
+                                        <button @click="deleteModal = true; deleteId = {{ $item->id }}"
+                                            class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
+                                            <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-span-full text-center text-gray-500 dark:text-gray-400">
+                                    Tidak ada data tersedia.
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
 
                     <div class="mt-4">
