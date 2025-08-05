@@ -1,6 +1,5 @@
 <!-- NAVIGATION -->
-<nav x-data="{ open: false }"
-    class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
+<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 print:hidden">
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <!-- Left section -->
@@ -80,13 +79,6 @@
                             </x-slot>
                         </x-dropdown>
                     @endif
-                    <!-- Animated Text Area (centered between Status and Profile dropdowns) -->
-                    <div class="hidden lg:block animated-banner">
-                        <div id="text-a" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">A
-                        </div>
-                        <div id="text-b" class="text-blue-500 text-base font-semibold opacity-0 translate-x-full">B
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- User Profile -->
@@ -207,53 +199,3 @@
         </div>
     </div>
 </nav>
-
-
-<script>
-    const messages = [
-        'Metland Spirit',
-        'Integritas',
-        'Semangat',
-        'Profesional',
-        'Kerja Keras',
-        'Enterpreneurship',
-        'Pantang Menyerah',
-        'Metland Coloring Life'
-    ];
-
-    let index = 0;
-    let isAActive = true;
-
-    const textA = document.getElementById('text-a');
-    const textB = document.getElementById('text-b');
-
-    function animateText() {
-        const current = isAActive ? textA : textB;
-        const next = isAActive ? textB : textA;
-
-        // Reset posisi next di luar kanan
-        next.textContent = messages[index];
-        next.classList.remove('translate-x-0', 'opacity-100');
-        next.classList.add('translate-x-full', 'opacity-0');
-
-        void next.offsetWidth; // trigger reflow agar animasi aktif
-
-        // Munculkan next ke tengah
-        next.classList.remove('translate-x-full', 'opacity-0');
-        next.classList.add('translate-x-0', 'opacity-100');
-
-        // Geser keluar current ke kanan
-        current.classList.remove('translate-x-0', 'opacity-100');
-        current.classList.add('translate-x-full', 'opacity-0');
-
-        isAActive = !isAActive;
-        index = (index + 1) % messages.length;
-    }
-
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            animateText();
-            setInterval(animateText, 4000);
-        }, 1000);
-    });
-</script>
