@@ -8,8 +8,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifyReporterOrderFinished extends Mailable
+class NotifyReporterOrderFinished extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
