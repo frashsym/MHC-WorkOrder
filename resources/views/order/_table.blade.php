@@ -38,6 +38,8 @@
                                     class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                     <i class="fas fa-edit mr-1"></i> Edit
                                 </button>
+                            @endif
+                            @if (Auth::user()->role_id === 1)
                                 <button type="button" @click="deleteModal = true; deleteId = {{ $order->id }}"
                                     class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
                                     <i class="fas fa-trash-alt mr-1"></i> Hapus
