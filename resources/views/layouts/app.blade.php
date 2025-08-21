@@ -31,11 +31,15 @@
             <header class="bg-white dark:bg-gray-800 shadow">
                 <div class="w-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <!-- Animated Text Area (tampil di semua perangkat) -->
-                    <div class="animated-banner text-blue-500 text-base font-semibold text-center py-2">
-                        <div id="text-a" class="opacity-0 translate-x-full">A</div>
-                        <div id="text-b" class="opacity-0 translate-x-full">B</div>
-                    </div>
-                    <br>
+                    @if (request()->is('order/*'))
+                        {{ $header }}
+                    @else
+                        <div class="animated-banner text-blue-500 text-base font-semibold text-center py-2">
+                            <div id="text-a" class="opacity-0 translate-x-full">A</div>
+                            <div id="text-b" class="opacity-0 translate-x-full">B</div>
+                            <br>
+                        </div>
+                    @endif
                 </div>
             </header>
         @endisset

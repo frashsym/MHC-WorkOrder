@@ -61,8 +61,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
                                         <textarea name="description" x-model="formData.description" rows="3"
-                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                                            required></textarea>
+                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
                                     </div>
 
                                     <!-- Kategori -->
@@ -197,17 +196,14 @@
                     {{-- Tombol Kiri: Edit & Delete --}}
                     <div class="flex gap-2">
                         @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
-                            <!-- Tombol Edit -->
-                            <button @click='openEdit(@json($order))'
-                                class="inline-flex items-center px-3 py-1 text-sm text-yellow-600 bg-yellow-100 hover:bg-yellow-200 rounded">
+                            <button @click="openEdit({{ $order }})"
+                                class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                 <i class="fas fa-edit mr-1"></i> Edit
                             </button>
                         @endif
-
                         @if (Auth::user()->role_id === 1)
-                            <!-- Tombol Delete -->
                             <button type="button" @click="deleteModal = true; deleteId = {{ $order->id }}"
-                                class="inline-flex items-center px-3 py-1 text-sm text-red-600 bg-red-100 hover:bg-red-200 rounded">
+                                class="inline-flex items-center px-2 py-1 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 rounded">
                                 <i class="fas fa-trash-alt mr-1"></i> Hapus
                             </button>
                         @endif
@@ -249,7 +245,6 @@
                     @if ($order->progress_id == 5)
                         {{-- Finish --}}
                         <div><strong>Durasi Selesai:</strong> {{ gmdate('H:i:s', $order->total_duration) }}</div>
-
                     @elseif ($order->progress_id == 3)
                         {{-- On Progress --}}
                         @php
@@ -264,7 +259,6 @@
                                 {{ gmdate('H:i:s', $runningSeconds) }}
                             </span>
                         </div>
-
                     @elseif ($order->progress_id == 4 && $order->paused_at && $order->started_at)
                         @php
                             $durasiSaatHold = $order->total_duration; // dalam detik
@@ -377,7 +371,7 @@
                 categories: @json($categories),
                 pics: @json($pics),
 
-                init() { },
+                init() {},
 
                 openCreate() {
                     this.resetForm();
@@ -387,7 +381,9 @@
 
                 openEdit(order) {
                     this.isEditMode = true;
-                    this.formData = { ...order };
+                    this.formData = {
+                        ...order
+                    };
                     this.fetchDependent(order.department_id);
                     this.modalOpen = true;
                 },

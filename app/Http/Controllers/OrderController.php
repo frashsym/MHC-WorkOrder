@@ -304,7 +304,7 @@ class OrderController extends Controller
             'due_date' => $dueDate,
         ]);
 
-        // Cek apakah status baru adalah Finished atau Cancel
+        // Cek apakah status baru Finished atau Cancel
         if (in_array($order->progress_id, [5, 6])) {
             $reporter = $order->reporterUser;
 
