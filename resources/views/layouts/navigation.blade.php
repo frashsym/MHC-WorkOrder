@@ -21,7 +21,7 @@
                         {{ __('Order') }}
                     </x-nav-link>
 
-                    @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
+                    @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2 || Auth::user()->role_id != 5)
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button

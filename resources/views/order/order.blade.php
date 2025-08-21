@@ -19,18 +19,20 @@
 
                         <!-- Tengah: Filter -->
                         <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4">
-                            <!-- Filter Departemen -->
-                            <div>
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Departemen</label>
-                                <select x-model="filters.department_id"
-                                    class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                    <option value="">Semua</option>
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @if (Auth::user()->role_id != 5)
+                                <!-- Filter Departemen -->
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Departemen</label>
+                                    <select x-model="filters.department_id"
+                                        class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                        <option value="">Semua</option>
+                                        @foreach ($departments as $dept)
+                                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
 
                             <!-- Filter Objek -->
                             <div>
@@ -76,7 +78,7 @@
 
                             <!-- Tombol Cari -->
                             <div>
-                                <button @click="fetchOrders"
+                                <button type="button" @click="fetchOrders"
                                     class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
                                     Cari
                                 </button>
@@ -91,9 +93,7 @@
                             </button>
                         </div>
                     </div>
-
                     <br>
-
                     <!-- Modal Dinamis -->
                     <div x-show="modalOpen" x-cloak>
                         <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
@@ -114,7 +114,7 @@
                                                 x-text="isEditMode ? 'Edit Order' : 'Tambah Order'"></h3>
                                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <!-- Departemen -->
-                                                <div>
+                                                <div @if(Auth::user()->role_id === 5) x-cloak class="hidden" @endif>
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Departemen</label>
                                                     <select name="department_id" x-model="formData.department_id"
@@ -127,6 +127,9 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                @if(Auth::user()->role_id === 5)
+                                                    <input type="hidden" name="department_id" value="2">
+                                                @endif
 
                                                 <!-- Judul -->
                                                 <div>
@@ -181,7 +184,7 @@
                                                 </div>
 
                                                 <!-- Reporter -->
-                                                <div>
+                                                <div @if(Auth::user()->role_id === 5) x-cloak class="hidden" @endif>
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Reporter</label>
                                                     <select name="reporter" x-model="formData.reporter"
@@ -193,6 +196,9 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                @if(Auth::user()->role_id === 5)
+                                                    <input type="hidden" name="reporter" value="{{ Auth::id() }}">
+                                                @endif
 
                                                 <!-- Progress -->
                                                 <div x-show="isEditMode">
@@ -303,22 +309,22 @@
     </div>
 
     <script>
-        // Fungsi untuk mengelola filter order
         function orderFilter() {
+            const isRole5 = {{ Auth::user()->role_id === 5 ? 'true' : 'false' }};
             return {
                 filters: {
-                    department_id: '',
+                    department_id: isRole5 ? 2 : '',   // role 5 fixed 2, lainnya kosong
                     item_id: '',
                     date_range: '',
                     start_date: '',
                     end_date: '',
                 },
-                allItems: @json($items), // Kirim semua item dari controller
+                allItems: @json($items),  // pastikan $items memuat id, name, department_id
                 get filteredItems() {
-                    if (!this.filters.department_id) {
-                        return this.allItems;
-                    }
-                    return this.allItems.filter(item => item.department_id == this.filters.department_id);
+                    // jika departemen "Semua" → tampilkan semua item
+                    if (!this.filters.department_id) return this.allItems;
+                    const dep = Number(this.filters.department_id);
+                    return this.allItems.filter(it => Number(it.department_id) === dep);
                 },
                 handleDateRangeChange() {
                     if (this.filters.date_range !== 'custom') {
@@ -327,17 +333,22 @@
                     }
                 },
                 fetchOrders() {
-                    let params = new URLSearchParams(this.filters).toString();
-                    fetch(`/order/filter?${params}`)
+                    // Kirim hanya parameter yang tidak kosong
+                    const params = new URLSearchParams();
+                    Object.entries(this.filters).forEach(([k, v]) => {
+                        if (v !== '' && v != null) params.append(k, v);
+                    });
+
+                    fetch(`/order/filter?${params.toString()}`)
                         .then(res => res.text())
                         .then(html => {
                             document.getElementById('order-table').innerHTML = html;
-                        });
+                        })
+                        .catch(err => console.error(err));
                 }
             }
         }
 
-        // Fungsi untuk mengelola form order
         function orderForm() {
             return {
                 modalOpen: false,
@@ -346,13 +357,13 @@
                 deleteId: null,
                 formData: {
                     id: null,
-                    department_id: '',
+                    department_id: {{ Auth::user()->role_id === 5 ? 2 : 'null' }},
                     title: '',
                     item_id: '',
                     description: '',
                     category_id: '',
                     pic: '',
-                    reporter: '',
+                    reporter: {{ Auth::user()->role_id === 5 ? Auth::id() : 'null' }},
                     progress_id: '',
                     priority_id: ''
                 },
@@ -360,7 +371,11 @@
                 categories: [],
                 pics: [],
 
-                init() { },
+                init() {
+                    if (this.formData.department_id) {
+                        this.fetchDependent(this.formData.department_id);
+                    }
+                },
 
                 openCreate() {
                     this.resetForm();
@@ -370,9 +385,7 @@
 
                 openEdit(order) {
                     this.isEditMode = true;
-                    this.formData = {
-                        ...order
-                    };
+                    this.formData = { ...order };
                     this.fetchDependent(order.department_id);
                     this.modalOpen = true;
                 },
@@ -380,19 +393,23 @@
                 resetForm() {
                     this.formData = {
                         id: null,
-                        department_id: '',
+                        department_id: {{ Auth::user()->role_id === 5 ? 2 : 'null' }},
                         title: '',
                         item_id: '',
                         description: '',
                         category_id: '',
                         pic: '',
-                        reporter: '',
+                        reporter: {{ Auth::user()->role_id === 5 ? Auth::id() : 'null' }},
                         progress_id: '',
                         priority_id: ''
                     };
                     this.items = [];
                     this.categories = [];
                     this.pics = [];
+                    // Tambahan -> fetch dependent ulang kalau department_id sudah ada
+                    if (this.formData.department_id) {
+                        this.fetchDependent(this.formData.department_id);
+                    }
                 },
 
                 fetchDependent(departmentId) {

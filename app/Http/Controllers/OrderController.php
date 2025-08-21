@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\NotifyReporterOrderCancelled;
 use App\Mail\NotifyReporterOrderFinished;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NotifyPicOrderCreated;
@@ -23,7 +24,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with([
+        $query = Order::with([
             'department',
             'category',
             'item',
@@ -31,7 +32,14 @@ class OrderController extends Controller
             'reporterUser',
             'progress',
             'priority'
-        ])->latest()->paginate(10);
+        ])->latest();
+
+        // Jika user role_id = 5, hanya tampilkan order departemen engineering (id = 2)
+        if (Auth::user()->role_id === 5) {
+            $query->where('department_id', 2);
+        }
+
+        $orders = $query->paginate(10);
 
         $departments = Department::all();
         $categories = Category::all();
@@ -72,25 +80,24 @@ class OrderController extends Controller
     {
         $query = Order::with(['department', 'picUser', 'category']);
 
-        $isFiltered = false;
-
-        // Filter berdasarkan departemen
-        if ($request->filled('department_id')) {
-            $query->where('department_id', $request->department_id);
-            $isFiltered = true;
+        // Paksa engineering untuk role_id 5
+        if (Auth::user()->role_id === 5) {
+            $query->where('department_id', 2);
+        } else {
+            // Role lain boleh filter departemen (hanya kalau tidak kosong)
+            if ($request->filled('department_id') && $request->department_id !== '') {
+                $query->where('department_id', $request->department_id);
+            }
         }
 
-        // Filter berdasarkan objek
-        if ($request->filled('item_id')) {
+        // Filter objek (hanya kalau tidak kosong)
+        if ($request->filled('item_id') && $request->item_id !== '') {
             $query->where('item_id', $request->item_id);
-            $isFiltered = true;
         }
 
-        // Filter berdasarkan range waktu
+        // Filter waktu
         if ($request->date_range && $request->date_range !== 'custom') {
             $date = now();
-            $isFiltered = true;
-
             switch ($request->date_range) {
                 case 'today':
                     $query->whereDate('create_date', $date->toDateString());
@@ -107,17 +114,14 @@ class OrderController extends Controller
             }
         } elseif ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('create_date', [$request->start_date, $request->end_date]);
-            $isFiltered = true;
         }
 
-        // Jika ada filter → ambil semua, jika tidak → pakai pagination
-        $orders = $isFiltered
-            ? $query->latest()->get()
-            : $query->latest()->paginate(10);
+        // PENTING: AJAX filter selalu kembalikan semua data (tanpa paginate)
+        $orders = $query->latest()->get();
 
         return view('order._table', compact('orders'))->render();
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([

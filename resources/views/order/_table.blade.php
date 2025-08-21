@@ -12,7 +12,7 @@
                     <th class="px-4 py-2 text-left">Tanggal</th>
                     <th class="px-4 py-2 text-left">Departemen</th>
                     <th class="px-4 py-2 text-left">Solver</th>
-                    <th class="px-4 py-2 text-left">Kategori</th>
+                    <th class="px-4 py-2 text-left">Objek</th>
                     <th class="px-4 py-2 text-left">Aksi</th>
                 </tr>
             </thead>
@@ -27,13 +27,13 @@
                         <td class="px-4 py-2">{{ $order->create_date ?? '-' }}</td>
                         <td class="px-4 py-2">{{ $order->department->name ?? '-' }}</td>
                         <td class="px-4 py-2">{{ $order->picUser->name ?? '-' }}</td>
-                        <td class="px-4 py-2">{{ $order->category->name ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $order->item->name ?? '-' }}</td>
                         <td class="px-4 py-2 space-x-2">
                             <a href="{{ route('order.show', $order->id) }}"
                                 class="inline-flex items-center px-2 py-1 text-sm text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded">
                                 <i class="fas fa-info-circle mr-1"></i> Info
                             </a>
-                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
+                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2 || Auth::user()->role_id != 5)
                                 <button @click="openEdit({{ $order }})"
                                     class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                     <i class="fas fa-edit mr-1"></i> Edit
@@ -62,7 +62,7 @@
                 <p><strong>Tanggal:</strong> {{ $order->create_date ?? '-' }}</p>
                 <p><strong>Departemen:</strong> {{ $order->department->name ?? '-' }}</p>
                 <p><strong>Solver:</strong> {{ $order->picUser->name ?? '-' }}</p>
-                <p><strong>Kategori:</strong> {{ $order->category->name ?? '-' }}</p>
+                <p><strong>Objek:</strong> {{ $order->item->name ?? '-' }}</p>
                 <div class="flex flex-wrap gap-2 mt-3">
                     <a href="{{ route('order.show', $order->id) }}"
                         class="inline-flex items-center px-2 py-1 text-sm text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Department;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -22,7 +23,13 @@ class DashboardController extends Controller
         // Jika bulan/tahun saat ini, batas sampai hari ini. Jika bulan lampau, sampai akhir bulan.
         $lastDay = ($startOfMonth->isSameMonth($today)) ? $today : $endOfMonth;
 
-        $departments = Department::all();
+        // Jika user role_id = 5 → pakai department engineering (id = 2), selain itu ambil semua
+        if (Auth::user()->role_id === 5) {
+            $departments = Department::where('id', 2)->get();
+        } else {
+            $departments = Department::all();
+        }
+
         $chartData = [];
 
         foreach ($departments as $department) {
@@ -50,7 +57,6 @@ class DashboardController extends Controller
             $rawLabels[] = $date->translatedFormat('d F Y');
         }
 
-        // Untuk default value di view
         return view('dashboard', compact(
             'chartData',
             'labels',
