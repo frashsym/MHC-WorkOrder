@@ -35,7 +35,7 @@ class OrderController extends Controller
         ])->latest();
 
         // Jika user role_id = 5, hanya tampilkan order departemen engineering (id = 2)
-        if (Auth::user()->role_id === 5) {
+        if (Auth::user()->role_id === 4) {
             $query->where('department_id', 2);
         }
 
@@ -80,8 +80,8 @@ class OrderController extends Controller
     {
         $query = Order::with(['department', 'picUser', 'category']);
 
-        // Paksa engineering untuk role_id 5
-        if (Auth::user()->role_id === 5) {
+        // Paksa engineering untuk role_id 4
+        if (Auth::user()->role_id === 4) {
             $query->where('department_id', 2);
         } else {
             // Role lain boleh filter departemen (hanya kalau tidak kosong)
@@ -121,7 +121,7 @@ class OrderController extends Controller
 
         return view('order._table', compact('orders'))->render();
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([

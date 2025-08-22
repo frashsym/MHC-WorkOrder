@@ -74,7 +74,7 @@
                             responsive: true,
                             plugins: {
                                 title: {
-                                    display: {{ Auth::user()->role_id === 5 ? 'false' : 'true' }},
+                                    display: {{ Auth::user()->role_id === 4 ? 'false' : 'true' }},
                                     text: 'Grafik Order per Hari Bulan Ini per Departemen'
                                 },
                                 tooltip: {

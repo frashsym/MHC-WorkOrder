@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $lastDay = ($startOfMonth->isSameMonth($today)) ? $today : $endOfMonth;
 
         // Jika user role_id = 5 → pakai department engineering (id = 2), selain itu ambil semua
-        if (Auth::user()->role_id === 5) {
+        if (Auth::user()->role_id === 4) {
             $departments = Department::where('id', 2)->get();
         } else {
             $departments = Department::all();

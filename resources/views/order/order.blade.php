@@ -19,7 +19,7 @@
 
                         <!-- Tengah: Filter -->
                         <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4">
-                            @if (Auth::user()->role_id != 5)
+                            @if (Auth::user()->role_id != 4)
                                 <!-- Filter Departemen -->
                                 <div>
                                     <label
@@ -114,7 +114,7 @@
                                                 x-text="isEditMode ? 'Edit Order' : 'Tambah Order'"></h3>
                                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <!-- Departemen -->
-                                                <div @if(Auth::user()->role_id === 5) x-cloak class="hidden" @endif>
+                                                <div @if(Auth::user()->role_id === 4) x-cloak class="hidden" @endif>
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Departemen</label>
                                                     <select name="department_id" x-model="formData.department_id"
@@ -127,7 +127,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                @if(Auth::user()->role_id === 5)
+                                                @if(Auth::user()->role_id === 4)
                                                     <input type="hidden" name="department_id" value="2">
                                                 @endif
 
@@ -184,7 +184,7 @@
                                                 </div>
 
                                                 <!-- Reporter -->
-                                                <div @if(Auth::user()->role_id === 5) x-cloak class="hidden" @endif>
+                                                <div @if(Auth::user()->role_id === 4) x-cloak class="hidden" @endif>
                                                     <label
                                                         class="block text-sm font-medium text-gray-700">Reporter</label>
                                                     <select name="reporter" x-model="formData.reporter"
@@ -196,7 +196,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                @if(Auth::user()->role_id === 5)
+                                                @if(Auth::user()->role_id === 4)
                                                     <input type="hidden" name="reporter" value="{{ Auth::id() }}">
                                                 @endif
 
@@ -310,7 +310,7 @@
 
     <script>
         function orderFilter() {
-            const isRole5 = {{ Auth::user()->role_id === 5 ? 'true' : 'false' }};
+            const isRole5 = {{ Auth::user()->role_id === 4 ? 'true' : 'false' }};
             return {
                 filters: {
                     department_id: isRole5 ? 2 : '',   // role 5 fixed 2, lainnya kosong
@@ -357,13 +357,13 @@
                 deleteId: null,
                 formData: {
                     id: null,
-                    department_id: {{ Auth::user()->role_id === 5 ? 2 : 'null' }},
+                    department_id: {{ Auth::user()->role_id === 4 ? 2 : 'null' }},
                     title: '',
                     item_id: '',
                     description: '',
                     category_id: '',
                     pic: '',
-                    reporter: {{ Auth::user()->role_id === 5 ? Auth::id() : 'null' }},
+                    reporter: {{ Auth::user()->role_id === 4 ? Auth::id() : 'null' }},
                     progress_id: '',
                     priority_id: ''
                 },
@@ -393,13 +393,13 @@
                 resetForm() {
                     this.formData = {
                         id: null,
-                        department_id: {{ Auth::user()->role_id === 5 ? 2 : 'null' }},
+                        department_id: {{ Auth::user()->role_id === 4 ? 2 : 'null' }},
                         title: '',
                         item_id: '',
                         description: '',
                         category_id: '',
                         pic: '',
-                        reporter: {{ Auth::user()->role_id === 5 ? Auth::id() : 'null' }},
+                        reporter: {{ Auth::user()->role_id === 4 ? Auth::id() : 'null' }},
                         progress_id: '',
                         priority_id: ''
                     };

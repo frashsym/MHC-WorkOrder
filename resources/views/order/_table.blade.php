@@ -33,7 +33,7 @@
                                 class="inline-flex items-center px-2 py-1 text-sm text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 rounded">
                                 <i class="fas fa-info-circle mr-1"></i> Info
                             </a>
-                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2 || Auth::user()->role_id != 5)
+                            @if (Auth::user()->role_id === 1 || Auth::user()->role_id === 2)
                                 <button @click="openEdit({{ $order }})"
                                     class="inline-flex items-center px-2 py-1 text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded">
                                     <i class="fas fa-edit mr-1"></i> Edit
