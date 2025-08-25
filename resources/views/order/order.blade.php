@@ -9,15 +9,18 @@
         <div class="w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                <!-- Bungkus tombol + modal dalam 1 x-data -->
-                <div x-data="orderForm()" x-init="init()" class="mb-4">
+                <!-- Parent: orderForm() masih pegang modal & tombol -->
+                <!-- Tambah: listen event searched dari child (orderFilter) -->
+                <div x-data="orderForm()" x-init="init()"
+                    @searched.window="searched = $event.detail.value; appliedFilters = $event.detail.filters || {}"
+                    class="mb-4">
                     <div class="flex justify-between items-start flex-wrap md:flex-nowrap gap-4 mb-4">
                         <!-- Kiri: Judul -->
                         <div class="flex-shrink-0">
                             <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-2">Daftar Order</h3>
                         </div>
 
-                        <!-- Tengah: Filter -->
+                        <!-- Tengah: Filter (child scope) -->
                         <div x-data="orderFilter()" class="flex flex-wrap items-end gap-4">
                             @if (Auth::user()->role_id != 4)
                                 <!-- Filter Departemen -->
@@ -76,7 +79,7 @@
                                 </div>
                             </template>
 
-                            <!-- Tombol Cari -->
+                            <!-- Tombol Cari (child) -->
                             <div>
                                 <button type="button" @click="fetchOrders"
                                     class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
@@ -85,16 +88,26 @@
                             </div>
                         </div>
 
-                        <!-- Kanan: Tombol Tambah -->
+                        <!-- Kanan: Tombol Dinamis (di parent scope) -->
                         <div class="flex-shrink-0 mt-2">
-                            <button @click="openCreate"
+                            <!-- Tambah Order (default) -->
+                            <button x-show="!searched" x-cloak @click="openCreate"
                                 class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
                                 <i class="fa-solid fa-plus"></i> Tambah Order
                             </button>
+
+                            <!-- Export Excel (muncul setelah cari) -->
+                            <a x-show="searched" x-cloak
+                                :href="'{{ route('order.export') }}'"
+                                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
+                                <i class="fa-solid fa-file-excel mr-2"></i> Export to Excel
+                            </a>
                         </div>
+
                     </div>
                     <br>
-                    <!-- Modal Dinamis -->
+
+                    <!-- Modal Dinamis (parent) -->
                     <div x-show="modalOpen" x-cloak>
                         <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
                         </div>
@@ -261,7 +274,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal Delete -->
+                    <!-- Modal Delete (tetap sama) -->
                     <div x-show="deleteModal" x-cloak>
                         <div x-show="deleteModal" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75">
                         </div>
@@ -313,15 +326,17 @@
             const isRole5 = {{ Auth::user()->role_id === 4 ? 'true' : 'false' }};
             return {
                 filters: {
-                    department_id: isRole5 ? 2 : '',   // role 5 fixed 2, lainnya kosong
+                    department_id: isRole5 ? 2 : '',
                     item_id: '',
                     date_range: '',
                     start_date: '',
                     end_date: '',
                 },
-                allItems: @json($items),  // pastikan $items memuat id, name, department_id
+                allItems: @json($items),
+                // lokal flag di child (tidak wajib untuk parent) - parent akan mendengar event
+                searchedLocal: false,
+
                 get filteredItems() {
-                    // jika departemen "Semua" → tampilkan semua item
                     if (!this.filters.department_id) return this.allItems;
                     const dep = Number(this.filters.department_id);
                     return this.allItems.filter(it => Number(it.department_id) === dep);
@@ -333,16 +348,23 @@
                     }
                 },
                 fetchOrders() {
-                    // Kirim hanya parameter yang tidak kosong
                     const params = new URLSearchParams();
+                    const payload = {}; // untuk dikirim ke parent sebagai appliedFilters
                     Object.entries(this.filters).forEach(([k, v]) => {
-                        if (v !== '' && v != null) params.append(k, v);
+                        if (v !== '' && v != null) {
+                            params.append(k, v);
+                            payload[k] = v;
+                        }
                     });
 
                     fetch(`/order/filter?${params.toString()}`)
                         .then(res => res.text())
                         .then(html => {
                             document.getElementById('order-table').innerHTML = html;
+                            // set lokal flag
+                            this.searchedLocal = true;
+                            // dispatch event ke parent: searched + filters (only non-empty)
+                            this.$dispatch('searched', { value: true, filters: payload });
                         })
                         .catch(err => console.error(err));
                 }
@@ -351,6 +373,7 @@
 
         function orderForm() {
             return {
+                // modal + form state
                 modalOpen: false,
                 isEditMode: false,
                 deleteModal: false,
@@ -371,10 +394,24 @@
                 categories: [],
                 pics: [],
 
+                // NEW: parent-side search state & applied filters
+                searched: false,
+                appliedFilters: {},
+
                 init() {
                     if (this.formData.department_id) {
                         this.fetchDependent(this.formData.department_id);
                     }
+                },
+
+                // helper buat export URL, pakai appliedFilters
+                exportUrl() {
+                    const params = new URLSearchParams();
+                    Object.entries(this.appliedFilters || {}).forEach(([k, v]) => {
+                        if (v !== '' && v != null) params.append(k, v);
+                    });
+                    const q = params.toString();
+                    return q ? `/order/export?${q}` : '/order/export';
                 },
 
                 openCreate() {
@@ -406,7 +443,6 @@
                     this.items = [];
                     this.categories = [];
                     this.pics = [];
-                    // Tambahan -> fetch dependent ulang kalau department_id sudah ada
                     if (this.formData.department_id) {
                         this.fetchDependent(this.formData.department_id);
                     }

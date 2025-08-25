@@ -7,6 +7,8 @@ use App\Mail\NotifyReporterOrderFinished;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderExport;
 use App\Mail\NotifyPicOrderCreated;
 use Illuminate\Http\Request;
 use App\Models\Department;
@@ -120,6 +122,13 @@ class OrderController extends Controller
         $orders = $query->latest()->get();
 
         return view('order._table', compact('orders'))->render();
+    }
+
+    public function export(Request $request)
+    {
+        $filters = $request->all();
+
+        return Excel::download(new OrderExport($filters), 'orders.xlsx', );
     }
 
     public function store(Request $request)

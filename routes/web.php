@@ -16,7 +16,7 @@ use App\Http\Controllers\DepartmentController;
 //     return view('welcome');
 // })->name('index');
 
-Route::middleware(['auth'],)->group(function () {
+Route::middleware(['auth'], )->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -35,7 +35,10 @@ Route::prefix('order')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('order.index'); // Menampilkan daftar order
     Route::post('/', [OrderController::class, 'store'])->name('order.store'); // Membuat order baru
     Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
-    Route::get('/{order}', [OrderController::class, 'show'])->name('order.show'); // Menampilkan detail order
+    Route::get('/export', [OrderController::class, 'export'])->name('order.export');
+    Route::get('/{order}', [OrderController::class, 'show'])
+        ->whereNumber('order')        // atau ->whereUuid('order')
+        ->name('order.show');
     // Hanya super admin & admin yang bisa mengupdate atau menghapus order
     Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::put('/{order}', [OrderController::class, 'update'])->name('order.update'); // Mengupdate order
