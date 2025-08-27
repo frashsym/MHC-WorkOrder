@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\OrderExport;
 use App\Mail\NotifyPicOrderCreated;
+use App\Exports\OrderExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Department;
 use App\Models\Category;
 use App\Models\Progress;
@@ -18,6 +19,7 @@ use App\Models\Priority;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -126,9 +128,124 @@ class OrderController extends Controller
 
     public function export(Request $request)
     {
-        $filters = $request->all();
+        // Ambil cuma filter yang kita dukung
+        $filters = $request->only([
+            'department_id',
+            'item_id',
+            'date_range',
+            'start_date',
+            'end_date',
+        ]);
 
-        return Excel::download(new OrderExport($filters), 'orders.xlsx', );
+        // ---------- Build dynamic filename ----------
+        $filename = 'Report';
+
+        // Default variabel agar tidak undefined
+        $deptName = null;
+
+        // Jika user role 4, paksa dep = 2 (sama seperti filter())
+        $user = Auth::user();
+        if ($user && $user->role_id === 4) {
+            $deptId = 2;
+        } else {
+            $deptId = $filters['department_id'] ?? null;
+        }
+
+        // Jika ada department, ambil nama
+        if (!empty($deptId) && $deptId !== '') {
+            $deptName = Department::find($deptId)?->name ?? null;
+            if ($deptName) {
+                $filename .= ' dep ' . $deptName;
+            }
+        }
+
+        // Jika ada item (objek)
+        if (!empty($filters['item_id']) && $filters['item_id'] !== '') {
+            $itemName = Item::find($filters['item_id'])?->name ?? null;
+            if ($itemName) {
+                $filename .= ($deptName ? ' - ' : ' ') . $itemName;
+            }
+        }
+
+        // ---------- Rentang Tanggal ----------
+        $dateRange = $filters['date_range'] ?? null;
+
+        // Reset start & end kalau bukan custom
+        if ($dateRange && $dateRange !== 'custom') {
+            $filters['start_date'] = null;
+            $filters['end_date'] = null;
+        }
+
+        $formatRange = function (Carbon $start, Carbon $end) {
+            // Swap kalau start > end
+            if ($start->gt($end)) {
+                [$start, $end] = [$end, $start];
+            }
+
+            if ($start->format('Y-m') === $end->format('Y-m')) {
+                return $start->format('d') . ' - ' . $end->translatedFormat('d F Y');
+            }
+            return $start->translatedFormat('d F Y') . ' - ' . $end->translatedFormat('d F Y');
+        };
+
+        if (!empty($dateRange) && $dateRange !== '') {
+            if ($dateRange === 'custom' && !empty($filters['start_date']) && !empty($filters['end_date'])) {
+                try {
+                    $start = Carbon::parse($filters['start_date']);
+                    $end = Carbon::parse($filters['end_date']);
+                    $filename .= ' ' . $formatRange($start, $end);
+                } catch (\Throwable $e) {
+                    $filename .= ' Invalid Date';
+                }
+            } else {
+                $now = now();
+                switch ($dateRange) {
+                    case 'today':
+                        $filename .= ' ' . $now->translatedFormat('d F Y');
+                        break;
+                    case 'week':
+                        $filename .= ' ' . $formatRange($now->copy()->startOfWeek(), $now->copy()->endOfWeek());
+                        break;
+                    case 'month':
+                        $filename .= ' ' . $formatRange($now->copy()->startOfMonth(), $now->copy()->endOfMonth());
+                        break;
+                    case 'year':
+                        $filename .= ' ' . $formatRange($now->copy()->startOfYear(), $now->copy()->endOfYear());
+                        break;
+                    default:
+                        $filename .= ' ' . Str::title($dateRange);
+                        break;
+                }
+            }
+        } else {
+            // fallback kalau date_range kosong tapi ada start_date & end_date
+            if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+                try {
+                    $start = Carbon::parse($filters['start_date']);
+                    $end = Carbon::parse($filters['end_date']);
+                    $filename .= ' ' . $formatRange($start, $end);
+                } catch (\Throwable $e) {
+                    $filename .= ' Invalid Date';
+                }
+            }
+        }
+
+        // sanitize filename: hanya alphanumeric, spasi, dash, underscore, titik
+        $filename = preg_replace('/[^A-Za-z0-9\-\_\.\s]/u', '', $filename);
+
+        // trim and limit length
+        $filename = trim($filename);
+        if (mb_strlen($filename) > 200) {
+            $filename = mb_substr($filename, 0, 200);
+        }
+
+        // tambahin ekstensi kalau belum ada
+        if (!Str::endsWith(strtolower($filename), '.xlsx')) {
+            $filename .= '.xlsx';
+        }
+
+        // ---------- Download with filters ----------
+        return Excel::download(new OrderExport($filters), $filename);
     }
 
     public function store(Request $request)
@@ -201,7 +318,7 @@ class OrderController extends Controller
 
         if ($order->progress_id == 3 && $order->resume_at) {
             $now = now();
-            $elapsed = \Carbon\Carbon::parse($order->resume_at)->diffInSeconds($now);
+            $elapsed = Carbon::parse($order->resume_at)->diffInSeconds($now);
             $totalSeconds += $elapsed;
         }
 
@@ -211,7 +328,7 @@ class OrderController extends Controller
         if ($isCancelled) {
             if ($order->started_at && $order->resume_at) {
                 $now = now();
-                $elapsed = \Carbon\Carbon::parse($order->resume_at)->diffInSeconds($now);
+                $elapsed = Carbon::parse($order->resume_at)->diffInSeconds($now);
                 $totalSeconds += $elapsed;
             }
             $cancelNote = "Order ini dibatalkan.";
@@ -221,7 +338,7 @@ class OrderController extends Controller
 
         $durasiHold = null;
         if ($order->progress_id == 4 && $order->paused_at) {
-            $elapsedHold = \Carbon\Carbon::parse($order->paused_at)->diffInSeconds(now());
+            $elapsedHold = Carbon::parse($order->paused_at)->diffInSeconds(now());
             $durasiHold = gmdate('H:i:s', $elapsedHold);
         }
 
@@ -268,7 +385,7 @@ class OrderController extends Controller
             $order->total_duration = 0;
         } elseif ($prevProgress == 3 && $newProgress == 4) {
             if ($order->resume_at) {
-                $elapsed = \Carbon\Carbon::parse($order->resume_at)->diffInSeconds($now);
+                $elapsed = Carbon::parse($order->resume_at)->diffInSeconds($now);
                 $order->total_duration += $elapsed;
             }
             $order->paused_at = $now;
@@ -278,7 +395,7 @@ class OrderController extends Controller
             $order->paused_at = null;
         } elseif ($newProgress == 5 || $newProgress == 6) {
             if ($order->resume_at) {
-                $elapsed = \Carbon\Carbon::parse($order->resume_at)->diffInSeconds($now);
+                $elapsed = Carbon::parse($order->resume_at)->diffInSeconds($now);
                 $order->total_duration += $elapsed;
             }
             $order->paused_at = null;

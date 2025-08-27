@@ -89,7 +89,9 @@
                         </div>
 
                         <!-- Kanan: Tombol Dinamis (di parent scope) -->
-                        <div class="flex-shrink-0 mt-2">
+                        <div x-data="{ searched: false, appliedFilters: {} }"
+                            @searched.window="searched = $event.detail.value; appliedFilters = $event.detail.filters"
+                            class="flex-shrink-0 mt-2">
                             <!-- Tambah Order (default) -->
                             <button x-show="!searched" x-cloak @click="openCreate"
                                 class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
@@ -98,7 +100,7 @@
 
                             <!-- Export Excel (muncul setelah cari) -->
                             <a x-show="searched" x-cloak
-                                :href="'{{ route('order.export') }}'"
+                                :href="`{{ route('order.export') }}?${new URLSearchParams(appliedFilters).toString()}`"
                                 class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
                                 <i class="fa-solid fa-file-excel mr-2"></i> Export to Excel
                             </a>
@@ -323,10 +325,10 @@
 
     <script>
         function orderFilter() {
-            const isRole5 = {{ Auth::user()->role_id === 4 ? 'true' : 'false' }};
+            const isRole4 = {{ Auth::user()->role_id === 4 ? 'true' : 'false' }};
             return {
                 filters: {
-                    department_id: isRole5 ? 2 : '',
+                    department_id: isRole4 ? 2 : '',
                     item_id: '',
                     date_range: '',
                     start_date: '',
