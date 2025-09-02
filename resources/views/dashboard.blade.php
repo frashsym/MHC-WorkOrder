@@ -99,7 +99,9 @@
 
                                 try {
                                     const res = await fetch("{{ route('dashboard.ordersByDateAndDepartment') }}?date=" +
-                                        encodeURIComponent(date) + "&department=" + encodeURIComponent(department));
+                                        encodeURIComponent(date) + "&department=" + encodeURIComponent(department), {
+                                        credentials: 'same-origin'
+                                    });
                                     const html = await res.text();
                                     document.getElementById('orderTableContainer').innerHTML = html;
                                 } catch (err) {
