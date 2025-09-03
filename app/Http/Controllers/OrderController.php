@@ -276,9 +276,9 @@ class OrderController extends Controller
             'total_duration' => 0,
         ]);
 
-        // Kirim email ke PIC setelah order dibuat (pakai send)
+        // Kirim email ke PIC setelah order dibuat (pakai queue)
         if ($order->picUser && $order->picUser->email) {
-            Mail::to($order->picUser->email)->send(new NotifyPicOrderCreated($order));
+            Mail::to($order->picUser->email)->queue(new NotifyPicOrderCreated($order));
         }
 
         if ($request->wantsJson()) {
@@ -436,9 +436,9 @@ class OrderController extends Controller
 
             if ($reporter && $reporter->email) {
                 if ($order->progress_id == 5) {
-                    Mail::to($reporter->email)->send(new NotifyReporterOrderFinished($order));
+                    Mail::to($reporter->email)->queue(new NotifyReporterOrderFinished($order));
                 } elseif ($order->progress_id == 6) {
-                    Mail::to($reporter->email)->send(new NotifyReporterOrderCancelled($order));
+                    Mail::to($reporter->email)->queue(new NotifyReporterOrderCancelled($order));
                 }
             }
         }
