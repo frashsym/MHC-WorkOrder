@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Department;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -23,16 +24,23 @@ class DashboardController extends Controller
         // Jika bulan/tahun saat ini, batas sampai hari ini. Jika bulan lampau, sampai akhir bulan.
         $lastDay = ($startOfMonth->isSameMonth($today)) ? $today : $endOfMonth;
 
-        // Jika user role_id = 5 → pakai department engineering (id = 2), selain itu ambil semua
         if (Auth::user()->role_id === 4) {
+            // role_id = 4 → khusus engineering saja
             $departments = Department::where('id', 2)->get();
-        } else {
+        } elseif (Auth::user()->role_id === 1) {
+            // SuperAdmin → selalu lihat semua departemen
             $departments = Department::all();
+        } else {
+            // user lain → cuma lihat yang visible
+            $departments = Department::where('is_visible', true)->get();
         }
+
+        // Hanya department yang visible yang dipakai untuk chart
+        $visibleDepartments = $departments->where('is_visible', true);
 
         $chartData = [];
 
-        foreach ($departments as $department) {
+        foreach ($visibleDepartments as $department) {
             $dailyCounts = [];
 
             for ($date = $startOfMonth->copy(); $date->lte($lastDay); $date->addDay()) {
@@ -58,6 +66,7 @@ class DashboardController extends Controller
         }
 
         return view('dashboard', compact(
+            'departments',     // <── tambahin ini biar nggak undefined
             'chartData',
             'labels',
             'rawLabels',
@@ -81,4 +90,21 @@ class DashboardController extends Controller
         return view('partials.orders-table', compact('orders'))->render(); // kirim potongan view
     }
 
+    public function toggleVisibility(Request $request, Department $department)
+    {
+        // hanya SuperAdmin yang boleh
+        if (Auth::user()->role_id !== 1) {
+            abort(403, 'Unauthorized');
+        }
+
+        $department->update([
+            'is_visible' => !$department->is_visible
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'is_visible' => $department->is_visible,
+            'message' => $department->is_visible ? 'Department ditampilkan' : 'Department disembunyikan'
+        ]);
+    }
 }

@@ -53,7 +53,28 @@
                     const rawLabels = @json($rawLabels);
                     const labels = @json($labels);
                     const datasets = @json($chartData).map((set, index) => {
-                        const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'];
+                        const colors = [
+                            '#007bff', // Biru
+                            '#28a745', // Hijau
+                            '#ffc107', // Kuning
+                            '#dc3545', // Merah
+                            '#6f42c1', // Ungu
+                            '#20c997', // Toska
+                            '#fd7e14', // Oranye
+                            '#17a2b8', // Biru muda
+                            '#6610f2', // Ungu terang
+                            '#e83e8c', // Pink
+                            '#adb5bd', // Abu-abu
+                            '#198754', // Hijau tua
+                            '#0dcaf0', // Cyan
+                            '#d63384', // Magenta
+                            '#ff6f61', // Coral
+                            '#845ec2', // Violet
+                            '#2c73d2', // Biru langit
+                            '#0081cf', // Biru laut
+                            '#00c9a7', // Emerald / Hijau toska
+                            '#c34a36'  // Cokelat bata
+                        ];
                         return {
                             label: set.label,
                             data: set.data,
@@ -83,6 +104,37 @@
                                         label: (tooltipItem) =>
                                             `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue} order`
                                     }
+                                },
+                                legend: {
+                                    onClick: async (e, legendItem, legend) => {
+                                        const index = legendItem.datasetIndex;
+                                        const ci = legend.chart;
+                                        const meta = ci.getDatasetMeta(index);
+
+                                        // toggle hide/show dataset
+                                        meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                                        ci.update();
+
+                                        // Kalau superadmin → simpan ke DB
+                                        @if(Auth::user()->role_id === 1)
+                                            const departmentName = ci.data.datasets[index].label;
+
+                                            try {
+                                                const res = await fetch("{{ route('dashboard.toggleVisibility', ':id') }}"
+                                                    .replace(':id', getDepartmentIdByName(departmentName)), {
+                                                    method: "POST",
+                                                    headers: {
+                                                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                                        "Accept": "application/json"
+                                                    }
+                                                });
+                                                const data = await res.json();
+                                                console.log("Saved:", data.message);
+                                            } catch (err) {
+                                                console.error("Gagal simpan visibility:", err);
+                                            }
+                                        @endif
+                }
                                 }
                             },
                             onClick: async (event, elements) => {
@@ -110,6 +162,12 @@
                             }
                         }
                     });
+
+                    // Helper untuk mapping nama department → ID
+                    function getDepartmentIdByName(name) {
+                        const mapping = @json(\App\Models\Department::pluck('id', 'name'));
+                        return mapping[name];
+                    }
                 </script>
 
             </div>

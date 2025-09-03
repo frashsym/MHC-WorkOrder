@@ -11,7 +11,10 @@ class Department extends Model
 
     protected $table = 'departments';
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'is_visible',
+    ];
 
     /**
      * Relasi dengan model User.

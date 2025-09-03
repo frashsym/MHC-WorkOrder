@@ -26,7 +26,10 @@ Route::middleware(['auth'], )->group(function () {
 // Dashboard routes
 Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/orders-by-date', [DashboardController::class, 'getOrdersByDateAndDepartment'])->name('dashboard.ordersByDateAndDepartment');
+    Route::get('/orders-by-date', [DashboardController::class, 'getOrdersByDateAndDepartment'])
+        ->name('dashboard.ordersByDateAndDepartment');
+    Route::post('/dashboard/{department}/toggle-visibility', [DashboardController::class, 'toggleVisibility'])
+        ->name('dashboard.toggleVisibility');
 });
 
 // API route to fetch dependent data based on department ID
