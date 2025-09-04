@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'reporter');
     }
 
+    public function manyOrders()
+    {
+        return $this->belongsToMany(Order::class, 'order_user', 'user_id', 'order_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

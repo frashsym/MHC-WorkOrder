@@ -85,4 +85,10 @@ class Order extends Model
     {
         return $this->belongsTo(Priority::class, 'priority_id');
     }
+
+    public function manyPics()
+    {
+        return $this->belongsToMany(User::class, 'order_user', 'order_id', 'user_id');
+    }
+
 }

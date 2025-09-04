@@ -35,10 +35,11 @@ class OrderController extends Controller
             'picUser',
             'reporterUser',
             'progress',
-            'priority'
+            'priority',
+            'manyPics', // eager load PICs
         ])->latest();
 
-        // Jika user role_id = 5, hanya tampilkan order departemen engineering (id = 2)
+        // Jika user role_id = 4, hanya tampilkan order departemen engineering (id = 2)
         if (Auth::user()->role_id === 4) {
             $query->where('department_id', 2);
         }
@@ -254,7 +255,8 @@ class OrderController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'item_id' => 'required|exists:items,id',
-            'pic' => 'required|exists:users,id',
+            'pics' => 'required|array',
+            'pics.*' => 'exists:users,id',   // boleh tambah 'integer' kalau mau
             'department_id' => 'required|exists:departments,id',
             'category_id' => 'required|exists:categories,id',
             'priority_id' => 'required|exists:priorities,id',
@@ -265,7 +267,7 @@ class OrderController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'item_id' => $request->item_id,
-            'pic' => $request->pic,
+            // 'pic' => $request->pic, // JANGAN lagi isi kolom ini
             'department_id' => $request->department_id,
             'category_id' => $request->category_id,
             'progress_id' => 1,
@@ -276,16 +278,21 @@ class OrderController extends Controller
             'total_duration' => 0,
         ]);
 
-        // Kirim email ke PIC setelah order dibuat (pakai queue)
-        if ($order->picUser && $order->picUser->email) {
-            Mail::to($order->picUser->email)->queue(new NotifyPicOrderCreated($order));
+        // Simpan banyak PIC ke pivot
+        $order->manyPics()->sync($request->pics);
+
+        // Kirim email ke semua PIC
+        foreach ($order->manyPics as $picUser) {
+            if ($picUser->email) {
+                Mail::to($picUser->email)->queue(new NotifyPicOrderCreated($order));
+            }
         }
 
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Order berhasil dibuat.',
-                'data' => $order,
+                'data' => $order->load('manyPics'),
             ], 201);
         }
 
@@ -363,7 +370,8 @@ class OrderController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'item_id' => 'required|exists:items,id',
-            'pic' => 'required|exists:users,id',
+            'pics' => 'required|array',
+            'pics.*' => 'exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'category_id' => 'required|exists:categories,id',
             'progress_id' => 'required|exists:progresses,id',
@@ -416,7 +424,6 @@ class OrderController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'item_id' => $request->item_id,
-            'pic' => $request->pic,
             'department_id' => $request->department_id,
             'category_id' => $request->category_id,
             'progress_id' => $newProgress,
@@ -429,6 +436,9 @@ class OrderController extends Controller
             'start_date' => $startDate,
             'due_date' => $dueDate,
         ]);
+
+        // Sinkronisasi PIC (pivot order_user)
+        $order->manyPics()->sync($request->pics);
 
         // Cek apakah status baru Finished atau Cancel
         if (in_array($order->progress_id, [5, 6])) {

@@ -61,7 +61,8 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
                                         <textarea name="description" x-model="formData.description" rows="3"
-                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
+                                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                                            required></textarea>
                                     </div>
 
                                     <!-- Kategori -->
@@ -78,9 +79,9 @@
                                     <!-- PIC -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">PIC</label>
-                                        <select name="pic" x-model="formData.pic"
+                                        <select name="pics[]" x-model="formData.pics"
                                             class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                                            required>
+                                            multiple required>
                                             <template x-for="pic in pics" :key="pic.id">
                                                 <option :value="pic.id" x-text="pic.name"></option>
                                             </template>
@@ -231,7 +232,16 @@
                     <div><strong>Kategori:</strong> {{ $order->category->name ?? '-' }}</div>
                     <div><strong>Progress:</strong> {{ $order->progress->status ?? '-' }}</div>
                     <div><strong>Prioritas:</strong> {{ $order->priority->priority ?? '-' }}</div>
-                    <div><strong>Solver:</strong> {{ $order->picUser->name ?? '-' }}</div>
+                    <div>
+                        <strong>Solver:</strong>
+                        @if($order->manyPics->isNotEmpty())
+                            @foreach($order->manyPics as $pic)
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded">{{ $pic->name }}</span>
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </div>
                     <div><strong>Reporter:</strong> {{ $order->reporterUser->name ?? '-' }}</div>
                     <div><strong>Tanggal Dibuat:</strong> {{ $order->create_date }}</div>
                     <div><strong>Waktu Dibuat:</strong> {{ $order->create_time }}</div>
@@ -371,7 +381,7 @@
                 categories: @json($categories),
                 pics: @json($pics),
 
-                init() {},
+                init() { },
 
                 openCreate() {
                     this.resetForm();

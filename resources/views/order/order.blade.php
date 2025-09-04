@@ -187,15 +187,67 @@
                                                 </div>
 
                                                 <!-- PIC -->
-                                                <div>
+                                                <div x-data="{
+    selectedPics: [],
+    init() {
+      // run sekali on-mount
+      this.updateSelected();
+    },
+    updateSelected() {
+      // jika formData.pics ada dan list opsi pics sudah terisi, mapping ke objek user
+      if (!this.$root.formData || !this.$root.formData.pics || !Array.isArray(this.$root.formData.pics)) {
+        this.selectedPics = [];
+        return;
+      }
+      if (!this.$root.pics || !this.$root.pics.length) {
+        // opsi belum tersedia -> kosongkan dulu (akan ter-trigger lagi saat pics terisi)
+        this.selectedPics = [];
+        return;
+      }
+      this.selectedPics = this.$root.formData.pics
+        .map(id => this.$root.pics.find(u => u.id == id))
+        .filter(Boolean);
+    }
+  }" x-init="
+    init();
+    // watch saat formData.pics berubah
+    $watch('$root.formData.pics', () => updateSelected());
+    // watch saat opsi pics (fetchDependent result) berubah
+    $watch('$root.pics', () => updateSelected());
+  " class="space-y-2">
                                                     <label class="block text-sm font-medium text-gray-700">PIC</label>
-                                                    <select name="pic" x-model="formData.pic"
-                                                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                                                        required>
+
+                                                    <!-- Dropdown PIC -->
+                                                    <select x-on:change="
+      let id = $event.target.value;
+      if (id && !selectedPics.find(pic => pic.id == id)) {
+        let user = pics.find(u => u.id == id);
+        if (user) selectedPics.push(user);
+      }
+      $event.target.value = '';
+    " class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="">-- Pilih PIC --</option>
                                                         <template x-for="pic in pics" :key="pic.id">
                                                             <option :value="pic.id" x-text="pic.name"></option>
                                                         </template>
                                                     </select>
+
+                                                    <!-- Chips / tags -->
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <template x-for="(pic, index) in selectedPics" :key="pic.id">
+                                                            <div
+                                                                class="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                                                                <span x-text="pic.name"></span>
+                                                                <button type="button"
+                                                                    class="ml-2 text-red-500 hover:text-red-700"
+                                                                    x-on:click="selectedPics.splice(index, 1)">
+                                                                    ✕
+                                                                </button>
+                                                                <!-- Hidden input biar terkirim ke backend -->
+                                                                <input type="hidden" name="pics[]" :value="pic.id">
+                                                            </div>
+                                                        </template>
+                                                    </div>
                                                 </div>
 
                                                 <!-- Reporter -->
@@ -387,7 +439,7 @@
                     item_id: '',
                     description: '',
                     category_id: '',
-                    pic: '',
+                    pics: [],
                     reporter: {{ Auth::user()->role_id === 4 ? Auth::id() : 'null' }},
                     progress_id: '',
                     priority_id: ''
@@ -426,6 +478,13 @@
                     this.isEditMode = true;
                     this.formData = { ...order };
                     this.fetchDependent(order.department_id);
+                    // isi ulang selectedPics dengan data lama
+                    this.$nextTick(() => {
+                        this.selectedPics = (order.pics || [])
+                            .map(id => this.pics.find(u => u.id == id))
+                            .filter(u => u);
+                    });
+
                     this.modalOpen = true;
                 },
 
@@ -437,7 +496,7 @@
                         item_id: '',
                         description: '',
                         category_id: '',
-                        pic: '',
+                        pics: [],
                         reporter: {{ Auth::user()->role_id === 4 ? Auth::id() : 'null' }},
                         progress_id: '',
                         priority_id: ''
